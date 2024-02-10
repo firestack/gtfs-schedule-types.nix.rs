@@ -18,7 +18,38 @@
 				"x86_64-linux"
 			];
 
-			perSystem = { pkgs, ... }: {
+			perSystem = { pkgs, lib, self', ... }: let linesFrom = lib.concatStringsSep "\n"; in {
+				packages.gtfs-static-html = pkgs.fetchurl {
+					name = "gtfs-static.html";
+					url = "https://gtfs.org/schedule/reference";
+					hash = "sha256-RHcc3G2lksdgGIlJuethbhoDST+TeHXjcBNGMbiawCQ=";
+				};
+
+				packages.gtfs-static-xhtml = pkgs.runCommand "gtfs-static.xhtml" {
+					buildInputs = [pkgs.html-tidy];
+				} (linesFrom [
+					"tidy -asxhtml --new-inline-tags c -o $out ${self'.packages.gtfs-static-html} || true"
+				]);
+
+				packages.gtfs-static-xml = pkgs.runCommand "gtfs-static.xml" {
+					buildInputs = [ pkgs.saxon-he ];
+				} (linesFrom [
+					"saxon-he -t \\"
+						"-s:${self'.packages.gtfs-static-xhtml} \\"
+						"-xsl:${./src/xsl/gtfs-static.xml.xsl} \\"
+						"-o:$out"
+				]);
+
+				packages.gtfs-static-rs = pkgs.runCommand "gtfs-static-rs" {
+					buildInputs = [ pkgs.saxon-he ];
+				} (linesFrom [
+					"mkdir $out"
+					"saxon-he -t \\"
+						"-s:${self'.packages.gtfs-static-xml} \\"
+						"-xsl:${./src/xsl/gtfs-static.rs.xsl}"
+					"cp ./gtfs-static/* $out/"
+				]);
+
 				devshells.default = {
 					packages = [
 						pkgs.saxon-he
