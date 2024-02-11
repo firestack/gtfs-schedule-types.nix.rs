@@ -68,12 +68,12 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 		<!-- Integer and Float Types -->
 		<xsl:when test="$type='Float'">Float</xsl:when>
 		<xsl:when test="$type='Integer'">Integer</xsl:when>
-		<xsl:when test="$type='Non-zero integer'">u64</xsl:when>
-		<xsl:when test="$type='Non-negative integer'">u64</xsl:when>
-		<xsl:when test="$type='Non-null integer'">u64</xsl:when>
-		<xsl:when test="$type='Positive integer'">u64</xsl:when>
-		<xsl:when test="$type='Non-negative float'">f64</xsl:when>
-		<xsl:when test="$type='Positive float'">f64</xsl:when>
+		<xsl:when test="$type='Non-zero integer'">NonZeroInteger</xsl:when>
+		<xsl:when test="$type='Non-negative integer'">NonNegativeInteger</xsl:when>
+		<xsl:when test="$type='Non-null integer'">NonNullInteger</xsl:when>
+		<xsl:when test="$type='Positive integer'">PositiveInteger</xsl:when>
+		<xsl:when test="$type='Non-negative float'">NonNegativeFloat</xsl:when>
+		<xsl:when test="$type='Positive float'">PositiveFloat</xsl:when>
 
 		<!-- Mapped Types -->
 		<xsl:when test="$type='URL'">Url</xsl:when>
