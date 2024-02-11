@@ -29,11 +29,14 @@
 {./description}
 */
 pub type {@id} = ();
+
 </xsl:for-each>
 </xsl:template>
 
 <xsl:template match="definitions">
-/* Structs */<xsl:for-each select="file"><xsl:variable name="struct-name" select="rs:struct-name(@id)" />
+/* Structs */<xsl:for-each select="file">
+<xsl:variable name="struct-name" select="rs:struct-name(@id)" />
+
 /**
 	{./description}
 */
@@ -52,8 +55,10 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 	 <xsl:param name="field_name" />
 
 	 <xsl:choose>
-		<xsl:when test="$type='Unique ID'">Id</xsl:when>
-		<xsl:when test="starts-with($type, 'Foreign ID')">{normalize-space(substring-after($type, "Foreign ID referencing"))}</xsl:when>
+		<!-- <xsl:when test="$type='Unique ID'">{substring-before($field_name, "_id")}Id</xsl:when> -->
+		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
+		<xsl:when test="starts-with($type, 'Foreign ID')">###{rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when>
+		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}???</xsl:when>
 
 		<xsl:when test="$type='Color'">Color</xsl:when>
 		<xsl:when test="$type='Currency code'">CurrencyCode</xsl:when>
@@ -61,7 +66,7 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 		<xsl:when test="$type='Date'">Date</xsl:when>
 		<xsl:when test="$type='Email'">Email</xsl:when>
 		<xsl:when test="$type='Enum'">NumericalEnum</xsl:when>
-		<xsl:when test="$type='ID'">ID</xsl:when>
+
 		<xsl:when test="$type='Language code'">LanguageCode</xsl:when>
 		<xsl:when test="$type='Latitude'">Latitude</xsl:when>
 		<xsl:when test="$type='Longitude'">Longitude</xsl:when>
@@ -72,6 +77,12 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 		<xsl:when test="$type='Text'">Text</xsl:when>
 		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
 		<xsl:when test="$type='URL'">Url</xsl:when>
+		<xsl:when test="$type='Non-zero integer'">u64</xsl:when>
+		<xsl:when test="$type='Non-negative integer'">u64</xsl:when>
+		<xsl:when test="$type='Non-null integer'">u64</xsl:when>
+		<xsl:when test="$type='Positive integer'">u64</xsl:when>
+		<xsl:when test="$type='Non-negative float'">f64</xsl:when>
+		<xsl:when test="$type='Positive float'">f64</xsl:when>
 		<xsl:when test="count(tokenize($type, 'or')) > 1">ENUM!</xsl:when>
 		<xsl:otherwise>!!!{$type} {count(tokenize($type, "or"))}</xsl:otherwise>
 	 </xsl:choose>
@@ -79,8 +90,20 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 
 <xsl:function name="rs:struct-name">
 	<xsl:param name="filename" />
-	<xsl:text>{substring-before($filename, ".txt")}</xsl:text>
+	<xsl:variable name="name" select="substring-before($filename, '.txt')" />
+	<xsl:text>{rs:normalize-title-case($name)}</xsl:text>
+	<!-- <xsl:text>{concat(upper-case(substring($name, 1,1)), substring($name, 2))}</xsl:text> -->
 </xsl:function>
 
+<xsl:function name="rs:normalize-title-case">
+	<xsl:param name="strings" />
+	<xsl:for-each select="trace($strings)">
+		<xsl:text>{concat(trace(upper-case(substring(., 1,1))), trace(substring(., 2)))}</xsl:text>
+	</xsl:for-each>
+</xsl:function>
 
+<xsl:function name="rs:normalize-id-type">
+	<xsl:param name="id" />
+	<xsl:text>{rs:normalize-title-case(tokenize($id, "_"))}</xsl:text>
+</xsl:function>
 </xsl:stylesheet>
