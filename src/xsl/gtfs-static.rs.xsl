@@ -57,7 +57,7 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 	 <xsl:choose>
 		<!-- Enums -->
 		<xsl:when test="$type='Enum'">NumericalEnum</xsl:when>
-		<!-- TODO --> <xsl:when test="count(tokenize($type, 'or')) > 1">ENUM!</xsl:when>
+		<!-- TODO --> <xsl:when test="count(tokenize($type, 'or')) > 1">todo!("enum!")</xsl:when>
 
 		<!-- ID's -->
 		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
@@ -91,8 +91,8 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 		<xsl:when test="$type='Text'">Text</xsl:when>
 		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
 
-		<!-- Default (Todo's) -->
-		<xsl:otherwise>todo!(); {$type} {count(tokenize($type, "or"))}</xsl:otherwise>
+		<!-- Default Fallback Error (Todo's) -->
+		<xsl:otherwise><xsl:message terminate="yes">Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
 	 </xsl:choose>
 </xsl:function>
 
