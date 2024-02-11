@@ -55,9 +55,9 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 	 <xsl:param name="field_name" />
 
 	 <xsl:choose>
-	 	<xsl:when test="count(tokenize($type, 'or')) > 1">ENUM!</xsl:when>
-
+		<!-- Enums -->
 		<xsl:when test="$type='Enum'">NumericalEnum</xsl:when>
+		<!-- TODO --> <xsl:when test="count(tokenize($type, 'or')) > 1">ENUM!</xsl:when>
 
 		<!-- <xsl:when test="$type='Unique ID'">{substring-before($field_name, "_id")}Id</xsl:when> -->
 		<!-- ID's -->
