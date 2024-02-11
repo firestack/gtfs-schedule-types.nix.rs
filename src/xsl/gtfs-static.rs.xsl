@@ -25,10 +25,10 @@
 <xsl:template match="types">
 /* Types */
 <xsl:for-each select="type">
-/*
-{./description}
-*/
-pub type {@id} = ();
+/**
+ * {./description}
+ */
+pub type {rs:gtfs-type(@id, "unknown", "GtfsId")} = ();
 
 </xsl:for-each>
 </xsl:template>
@@ -42,7 +42,7 @@ pub type {@id} = ();
 */
 pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 	/**
-	 *
+	 * {./description}
 	 */
 	pub {@id}: {rs:gtfs-type(@type, @presence, @id)},
 </xsl:for-each>}}
@@ -55,9 +55,15 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 	 <xsl:param name="field_name" />
 
 	 <xsl:choose>
-		<!-- Enums -->
-		<xsl:when test="$type='Enum'">NumericalEnum</xsl:when>
-		<!-- TODO --> <xsl:when test="count(tokenize($type, 'or')) > 1">todo!("enum!")</xsl:when>
+		<!-- Direct Types -->
+		<xsl:when test="$type='Color'">Color</xsl:when>
+		<xsl:when test="$type='Date'">Date</xsl:when>
+		<xsl:when test="$type='Email'">Email</xsl:when>
+		<xsl:when test="$type='Latitude'">Latitude</xsl:when>
+		<xsl:when test="$type='Longitude'">Longitude</xsl:when>
+		<xsl:when test="$type='Time'">Time</xsl:when>
+		<xsl:when test="$type='Text'">Text</xsl:when>
+		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
 
 		<!-- ID's -->
 		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
@@ -81,15 +87,9 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 		<xsl:when test="$type='Currency code'">CurrencyCode</xsl:when>
 		<xsl:when test="$type='Currency amount'">CurrencyAmount</xsl:when>
 
-		<!-- Direct Types -->
-		<xsl:when test="$type='Color'">Color</xsl:when>
-		<xsl:when test="$type='Date'">Date</xsl:when>
-		<xsl:when test="$type='Email'">Email</xsl:when>
-		<xsl:when test="$type='Latitude'">Latitude</xsl:when>
-		<xsl:when test="$type='Longitude'">Longitude</xsl:when>
-		<xsl:when test="$type='Time'">Time</xsl:when>
-		<xsl:when test="$type='Text'">Text</xsl:when>
-		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
+		<!-- Enums -->
+		<xsl:when test="$type='Enum'">GtfsEnum</xsl:when>
+		<!-- TODO --> <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!")</xsl:when>
 
 		<!-- Default Fallback Error (Todo's) -->
 		<xsl:otherwise><xsl:message terminate="yes">Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
