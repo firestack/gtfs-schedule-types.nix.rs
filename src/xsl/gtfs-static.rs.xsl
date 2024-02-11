@@ -105,8 +105,8 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 
 <xsl:function name="rs:normalize-title-case">
 	<xsl:param name="strings" />
-	<xsl:for-each select="trace($strings)">
-		<xsl:text>{concat(trace(upper-case(substring(., 1,1))), trace(substring(., 2)))}</xsl:text>
+	<xsl:for-each select="$strings">
+		<xsl:text>{concat(upper-case(substring(., 1,1)), substring(., 2))}</xsl:text>
 	</xsl:for-each>
 </xsl:function>
 
