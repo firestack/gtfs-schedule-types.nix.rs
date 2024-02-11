@@ -55,36 +55,45 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 	 <xsl:param name="field_name" />
 
 	 <xsl:choose>
-		<!-- <xsl:when test="$type='Unique ID'">{substring-before($field_name, "_id")}Id</xsl:when> -->
-		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
-		<xsl:when test="starts-with($type, 'Foreign ID')">###{rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when>
-		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}???</xsl:when>
+	 	<xsl:when test="count(tokenize($type, 'or')) > 1">ENUM!</xsl:when>
 
-		<xsl:when test="$type='Color'">Color</xsl:when>
-		<xsl:when test="$type='Currency code'">CurrencyCode</xsl:when>
-		<xsl:when test="$type='Currency amount'">CurrencyAmount</xsl:when>
-		<xsl:when test="$type='Date'">Date</xsl:when>
-		<xsl:when test="$type='Email'">Email</xsl:when>
 		<xsl:when test="$type='Enum'">NumericalEnum</xsl:when>
 
-		<xsl:when test="$type='Language code'">LanguageCode</xsl:when>
-		<xsl:when test="$type='Latitude'">Latitude</xsl:when>
-		<xsl:when test="$type='Longitude'">Longitude</xsl:when>
+		<!-- <xsl:when test="$type='Unique ID'">{substring-before($field_name, "_id")}Id</xsl:when> -->
+		<!-- ID's -->
+		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
+		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
+		<!-- TODO --> <xsl:when test="starts-with($type, 'Foreign ID')">###{rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when>
+
+		<!-- Integer and Float Types -->
 		<xsl:when test="$type='Float'">Float</xsl:when>
 		<xsl:when test="$type='Integer'">Integer</xsl:when>
-		<xsl:when test="$type='Phone number'">PhoneNumber</xsl:when>
-		<xsl:when test="$type='Time'">Time</xsl:when>
-		<xsl:when test="$type='Text'">Text</xsl:when>
-		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
-		<xsl:when test="$type='URL'">Url</xsl:when>
 		<xsl:when test="$type='Non-zero integer'">u64</xsl:when>
 		<xsl:when test="$type='Non-negative integer'">u64</xsl:when>
 		<xsl:when test="$type='Non-null integer'">u64</xsl:when>
 		<xsl:when test="$type='Positive integer'">u64</xsl:when>
 		<xsl:when test="$type='Non-negative float'">f64</xsl:when>
 		<xsl:when test="$type='Positive float'">f64</xsl:when>
-		<xsl:when test="count(tokenize($type, 'or')) > 1">ENUM!</xsl:when>
-		<xsl:otherwise>!!!{$type} {count(tokenize($type, "or"))}</xsl:otherwise>
+
+		<!-- Mapped Types -->
+		<xsl:when test="$type='URL'">Url</xsl:when>
+		<xsl:when test="$type='Language code'">LanguageCode</xsl:when>
+		<xsl:when test="$type='Phone number'">PhoneNumber</xsl:when>
+		<xsl:when test="$type='Currency code'">CurrencyCode</xsl:when>
+		<xsl:when test="$type='Currency amount'">CurrencyAmount</xsl:when>
+
+		<!-- Direct Types -->
+		<xsl:when test="$type='Color'">Color</xsl:when>
+		<xsl:when test="$type='Date'">Date</xsl:when>
+		<xsl:when test="$type='Email'">Email</xsl:when>
+		<xsl:when test="$type='Latitude'">Latitude</xsl:when>
+		<xsl:when test="$type='Longitude'">Longitude</xsl:when>
+		<xsl:when test="$type='Time'">Time</xsl:when>
+		<xsl:when test="$type='Text'">Text</xsl:when>
+		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
+
+		<!-- Default (Todo's) -->
+		<xsl:otherwise>todo!(); {$type} {count(tokenize($type, "or"))}</xsl:otherwise>
 	 </xsl:choose>
 </xsl:function>
 
