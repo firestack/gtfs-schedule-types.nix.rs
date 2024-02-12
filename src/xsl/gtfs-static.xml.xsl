@@ -73,6 +73,7 @@
 		type="{x:td[2]/node()}"
 		presence="{x:td[3]/node()}"
 	>
+		<type>{x:td[2]/node()}</type>
 		<description><xsl:copy-of select="x:td[4]/node()"/></description>
 	</field>
 </xsl:template>

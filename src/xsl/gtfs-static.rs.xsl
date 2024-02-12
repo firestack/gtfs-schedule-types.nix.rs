@@ -14,10 +14,20 @@
 
 <!-- Root Template -->
 <xsl:template match="/gtfs-static" mode="#default" saxon:explain="yes" >
+	<xsl:result-document href="gtfs-static/search.xml" method="xml" indent="true">
+		<search>
+			<xsl:for-each select="//fields/field"><xsl:sort select="type"/>
+				<type><xsl:value-of select="type" /></type>
+			</xsl:for-each>
+		</search>
+	</xsl:result-document>
 	<xsl:result-document href="gtfs-static/types.rs" method="text">
 		<xsl:apply-templates select="types"/>
 	</xsl:result-document>
 	<xsl:result-document href="gtfs-static/files.rs" method="text">
+		<xsl:text>use super::types::*;
+</xsl:text>
+
 		<xsl:apply-templates select="definitions"/>
 	</xsl:result-document>
 </xsl:template>
@@ -25,8 +35,7 @@
 <xsl:template match="types">
 /* Types */
 <xsl:for-each select="type">
-/**
- * {./description}
+/** {./description}
  */
 pub type {rs:gtfs-type(@id, "unknown", "GtfsId")} = ();
 
@@ -42,7 +51,7 @@ pub type {rs:gtfs-type(@id, "unknown", "GtfsId")} = ();
 */
 pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 	/**
-	 * {./description}
+	 <!-- * {./description} -->
 	 */
 	pub {@id}: {rs:gtfs-type(@type, @presence, @id)},
 </xsl:for-each>}}
@@ -68,7 +77,7 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 		<!-- ID's -->
 		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
 		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
-		<!-- TODO --> <xsl:when test="starts-with($type, 'Foreign ID')">###{rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when>
+		<!-- TODO --> <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when>
 
 		<!-- Integer and Float Types -->
 		<xsl:when test="$type='Float'">Float</xsl:when>
@@ -99,8 +108,7 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 <xsl:function name="rs:struct-name">
 	<xsl:param name="filename" />
 	<xsl:variable name="name" select="substring-before($filename, '.txt')" />
-	<xsl:text>{rs:normalize-title-case($name)}</xsl:text>
-	<!-- <xsl:text>{concat(upper-case(substring($name, 1,1)), substring($name, 2))}</xsl:text> -->
+	<xsl:text>{rs:normalize-id-type($name)}</xsl:text>
 </xsl:function>
 
 <xsl:function name="rs:normalize-title-case">
