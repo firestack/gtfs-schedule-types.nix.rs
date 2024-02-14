@@ -48,6 +48,7 @@
 						"-s:${self'.packages.gtfs-static-xml} \\"
 						"-xsl:${./src/xsl/gtfs-static.rs.xsl}"
 					"cp ./gtfs-static/* $out/"
+					"ln -s ${self'.packages.gtfs-static-xml} $out/gtfs-static.xml"
 				]);
 
 				devshells.default = {
