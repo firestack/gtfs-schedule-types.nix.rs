@@ -40,16 +40,43 @@
 						"-o:$out"
 				]);
 
-				packages.gtfs-static-rs = pkgs.runCommand "gtfs-static-rs" {
+				# packages.gtfs-static-rs = pkgs.runCommand "gtfs-static-rs" {
+				# 	buildInputs = [ pkgs.saxon-he ];
+				# 	src = ./src/xsl;
+				# } (linesFrom [
+				# 	"ls -la"
+				# 	"mkdir $out"
+				# 	"saxon-he -t \\"
+				# 		"-s:${self'.packages.gtfs-static-xml} \\"
+				# 		"-xsl:${./src/xsl/gtfs-static.rs.xsl}"
+				# 	"cp ./gtfs-static/* $out/"
+				# 	"ln -s ${self'.packages.gtfs-static-xml} $out/gtfs-static.xml"
+				# ]);
+
+
+				packages.gtfs-static-rs = pkgs.stdenvNoCC.mkDerivation {
+					pname = "gtfs-static-rs";
+					version = "0.0.1";
+
+					src = ./src/xsl;
+
 					buildInputs = [ pkgs.saxon-he ];
-				} (linesFrom [
-					"mkdir $out"
-					"saxon-he -t \\"
-						"-s:${self'.packages.gtfs-static-xml} \\"
-						"-xsl:${./src/xsl/gtfs-static.rs.xsl}"
-					"cp ./gtfs-static/* $out/"
-					"ln -s ${self'.packages.gtfs-static-xml} $out/gtfs-static.xml"
-				]);
+
+					buildPhase = linesFrom [
+						"ls -la"
+						"mkdir $out"
+
+						"saxon-he -t \\"
+							"-s:${self'.packages.gtfs-static-xml} \\"
+							"-xsl:gtfs-static.rs.xsl"
+					];
+
+					installPhase = linesFrom [
+						"cp ./gtfs-static/* $out/"
+						"ln -s ${self'.packages.gtfs-static-xml} $out/gtfs-static.xml"
+					];
+
+				};
 
 				devshells.default = {
 					packages = [
