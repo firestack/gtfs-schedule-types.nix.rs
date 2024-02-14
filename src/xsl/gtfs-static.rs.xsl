@@ -2,7 +2,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:saxon="http://saxon.sf.net/"
-	xmlns:rs="https://www.rust-lang.org/"
+	xmlns:rs="https://www.rust-lang.org.kaylafire.me/"
 	xmlns:xs="math"
 
 	exclude-result-prefixes="#all"
@@ -12,17 +12,107 @@
 <xsl:output method="text" />
 <xsl:strip-space elements="*"/>
 
+<xsl:variable name="foreign-prefix" >Foreign ID referencing</xsl:variable>
+
+<xsl:function name="rs:get-foreign-keys">
+	<xsl:param name="type-string"/>
+	<xsl:variable name="foreign-keys" select="substring-after($type-string, $foreign-prefix)"/>
+	<xsl:copy-of select="tokenize($foreign-keys, ' or')"/>
+</xsl:function>
+
+<xsl:function name="rs:is-foreign-id">
+	<xsl:param name="type-string"/>
+	<xsl:copy-of select="starts-with($type-string, $foreign-prefix)"/>
+</xsl:function>
+
+<xsl:function name="rs:split-foreign-key">
+	<xsl:param name="type-string"/>
+	<xsl:variable name="normal-type-string" select="normalize-space($type-string)"/>
+	<out>
+		<file>{substring-before($normal-type-string, ".")}</file>
+		<type>{substring-after($normal-type-string, ".")}</type>
+	</out>
+</xsl:function>
+
+
+<xsl:function name="rs:get-split-foreign-keys">
+	<xsl:param name="type-string"/>
+
+	<xsl:for-each select="rs:get-foreign-keys($type-string)">
+		<xsl:copy-of select="rs:split-foreign-key(.)"/>
+	</xsl:for-each>
+</xsl:function>
+
+<!-- <xsl:function name="rs:get-foreign-key-type">
+	<xsl:param name="type-string"/>
+	<xsl:copy-of select="starts-with($type-string, $foreign-prefix)"/>
+</xsl:function> -->
+
+<xsl:function name="rs:get-distinct-types">
+	<xsl:param name="nodes"/>
+	<xsl:variable name="distinct-types">
+		<xsl:for-each select="($nodes)"><xsl:sort select="."/>
+			<xsl:choose>
+					<xsl:when test="rs:is-foreign-id(.)">
+						<xsl:variable name="types">
+							<xsl:for-each select="rs:get-split-foreign-keys(.)">
+								<foreign-key>{rs:normalize-id-type(./type)}</foreign-key>
+							</xsl:for-each>
+						</xsl:variable>
+						<xsl:for-each select="$types/foreign-key"><type>{.}</type></xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise><type>{.}</type></xsl:otherwise>
+				</xsl:choose>
+
+		</xsl:for-each>
+	</xsl:variable>
+
+	<xsl:for-each select="distinct-values($distinct-types/type)">
+		<type>{.}</type>
+	</xsl:for-each>
+</xsl:function>
+
+<!-- <xsl:key
+	name="typesDistinct"
+	match="//fields/field"
+	use="rs:gtfs-type(type, '', id)"
+/> -->
+
+<xsl:key
+	name="typesDistinct"
+	match="//fields/field | //types/type"
+>
+	<xsl:choose>
+		<xsl:when test="../id">{rs:gtfs-type(id, ../presence, ../id)}</xsl:when>
+		<xsl:otherwise>{rs:gtfs-type(id, "", id)}</xsl:otherwise>
+	</xsl:choose>
+</xsl:key>
+
 <!-- Root Template -->
 <xsl:template match="/gtfs-static" mode="#default" saxon:explain="yes" >
 	<xsl:result-document href="gtfs-static/search.xml" method="xml" indent="true">
 		<search>
-			<xsl:for-each select="//fields/field"><xsl:sort select="type"/>
-				<type><xsl:value-of select="type" /></type>
+			<xsl:for-each select="//fields/field[generate-id() = generate-id(key('typesDistinct', rs:gtfs-type(type, '', id))[1])]">
+				<xsl:sort select="type" />
+				<type original="{type}">{rs:gtfs-type(type, presense, id)}</type>
 			</xsl:for-each>
 		</search>
 	</xsl:result-document>
 	<xsl:result-document href="gtfs-static/types.rs" method="text">
-		<xsl:apply-templates select="types"/>
+		<!-- <xsl:apply-templates select="types"/> -->
+/* Types */
+<xsl:for-each select="//types/type | //fields/field[generate-id() = generate-id(key('typesDistinct', rs:gtfs-type(type, '', id))[1])]/type">
+<!-- <xsl:for-each select="types/type | //fields/field/type"> -->
+<xsl:sort select="rs:gtfs-type(./id, 'unknown', 'GtfsId')"/>
+/** <!-- {./description} -->
+ */
+pub type <xsl:choose>
+	<xsl:when test="../id">{rs:gtfs-type(id, ../presence, ../id)} = ();</xsl:when>
+	<xsl:otherwise>{rs:gtfs-type(id, "unknown", "GtfsId")} = ();</xsl:otherwise>
+</xsl:choose>
+
+
+</xsl:for-each>
 	</xsl:result-document>
 	<xsl:result-document href="gtfs-static/files.rs" method="text">
 		<xsl:text>use super::types::*;
@@ -33,27 +123,19 @@
 </xsl:template>
 
 <xsl:template match="types">
-/* Types */
-<xsl:for-each select="type">
-/** {./description}
- */
-pub type {rs:gtfs-type(@id, "unknown", "GtfsId")} = ();
 
-</xsl:for-each>
 </xsl:template>
 
 <xsl:template match="definitions">
-/* Structs */<xsl:for-each select="file">
-<xsl:variable name="struct-name" select="rs:struct-name(@id)" />
-
-/**
-	{./description}
+/* Structs */
+<xsl:for-each select="file">
+<xsl:variable name="struct-name" select="rs:struct-name-from-filename(id)" />
+/** <!-- {description} -->
 */
 pub struct {$struct-name} {{<xsl:for-each select="fields/field">
-	/**
-	 <!-- * {./description} -->
+	/** <!-- {./description} -->
 	 */
-	pub {@id}: {rs:gtfs-type(@type, @presence, @id)},
+	pub {id}: {rs:gtfs-type(type, presence, id)},
 </xsl:for-each>}}
 </xsl:for-each>
 </xsl:template>
@@ -77,7 +159,9 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 		<!-- ID's -->
 		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
 		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
-		<!-- TODO --> <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when>
+		<!-- TODO --> <!-- <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
+		<xsl:when test="rs:is-foreign-id($type)">{rs:normalize-id-type((rs:get-split-foreign-keys($type)/type)[1])}</xsl:when>
+		<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
 
 		<!-- Integer and Float Types -->
 		<xsl:when test="$type='Float'">Float</xsl:when>
@@ -98,14 +182,19 @@ pub struct {$struct-name} {{<xsl:for-each select="fields/field">
 
 		<!-- Enums -->
 		<xsl:when test="$type='Enum'">GtfsEnum</xsl:when>
-		<!-- TODO --> <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!")</xsl:when>
+		<xsl:when test="$type='Text or URL or Email or Phone number'">TranslationValue</xsl:when>
+		<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_id')">RecordId</xsl:when>
+		<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_sub_id')">RecordSubId</xsl:when>
+		<!-- TODO --> <xsl:when test="$type='Foreign ID'">todo!("Foreign ID")</xsl:when>
+		<!-- TODO --> <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!"); {$type}</xsl:when>
 
+		<xsl:otherwise>todo!("fallback") {$type}</xsl:otherwise>
 		<!-- Default Fallback Error (Todo's) -->
-		<xsl:otherwise><xsl:message terminate="yes">Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
+		<!-- <xsl:otherwise><xsl:message terminate="yes">Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise> -->
 	 </xsl:choose>
 </xsl:function>
 
-<xsl:function name="rs:struct-name">
+<xsl:function name="rs:struct-name-from-filename">
 	<xsl:param name="filename" />
 	<xsl:variable name="name" select="substring-before($filename, '.txt')" />
 	<xsl:text>{rs:normalize-id-type($name)}</xsl:text>

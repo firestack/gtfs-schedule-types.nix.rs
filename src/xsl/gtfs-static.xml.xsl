@@ -9,7 +9,7 @@
 	version="3.0"
 >
 <xsl:output method="xml" indent="true" />
-<xsl:strip-space elements="x:*"/>
+<xsl:strip-space elements="*"/>
 
 <!-- Root Template -->
 <xsl:template match="/" mode="#default" saxon:explain="yes" >
@@ -34,11 +34,10 @@
 </xsl:template>
 
 <xsl:template match="x:*" mode="field-type">
-	<type
-		id="{x:strong}"
-	>
+	<type>
+		<id>{x:strong}</id>
 		<description>
-			<xsl:copy-of select="./node()" />
+			<xsl:copy-of select="node()" />
 		</description>
 	</type>
 </xsl:template>
@@ -60,7 +59,8 @@
 				<key>{./text()}</key>
 			</xsl:for-each>
 		</primary-key>
-		<description>{//x:tr[./x:a[href=@id]]}</description>
+		<!-- <description>{//x:tr[./x:a[href=@id]]}</description> -->
+		<!-- <description>{./following-sibling::*[contains(., "Primary key")]/following-sibling::*[1]}</description> -->
 		<fields>
 			<xsl:apply-templates select="(./following::x:table)[1]/x:tbody/x:tr" mode="file-field" />
 		</fields>
@@ -68,13 +68,11 @@
 </xsl:template>
 
 <xsl:template match="x:tr" mode="file-field">
-	<field
-		id="{x:td[1]/node()}"
-		type="{x:td[2]/node()}"
-		presence="{x:td[3]/node()}"
-	>
-		<type>{x:td[2]/node()}</type>
-		<description><xsl:copy-of select="x:td[4]/node()"/></description>
+	<field>
+		<id>{x:td[1]/node()}</id>
+		<type><id>{x:td[2]/node()}</id></type>
+		<presence>{x:td[3]/node()}</presence>
+		<!-- <description><xsl:copy-of select="x:td[4]/node()"/></description> -->
 	</field>
 </xsl:template>
 </xsl:stylesheet>
