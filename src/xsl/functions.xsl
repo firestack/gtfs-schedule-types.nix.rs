@@ -100,32 +100,20 @@
 		<xsl:when test="$field_name=''"></xsl:when>
 		<xsl:when test="rs:is-foreign-id($type)">
 			<xsl:variable name="split-keys" select="rs:get-split-foreign-keys($type)/type"/>
-			<xsl:choose>
-				<xsl:when test="$unique-id-map/field[name=$split-keys[1] and type/name='Unique ID']">
-					<xsl:value-of select="rs:normalize-id-type(replace($split-keys[1], '_id$', '_uid'))"/>
-					<!-- <xsl:message terminate="yes">[rs:gtfs-type] Warning: Undefined Type:</xsl:message> -->
-				</xsl:when>
-				<!-- <xsl:when test="$unique-id-map[name=$split-keys[1] and type/name='Unique ID']">{rs:normalize-id-type(replace($split-keys[1], "_id$", "_uid"))}</xsl:when> -->
-				<xsl:otherwise>
-					<xsl:value-of select="rs:normalize-id-type($split-keys[1])"/>
-				<!-- <xsl:message terminate="yes">[rs:gtfs-type] Warning: Undefined Type</xsl:message> -->
-				</xsl:otherwise>
-			</xsl:choose>
 
 			<!--
 				We're taking a shortcut with the `[1]` because
 				right now all foreign keys reference the same key and not any pairs
 				[revisit!]
-				lol this was so wrong
 			-->
-			<!-- <xsl:value-of select="
-				rs:normalize-id-type(
-					replace(
-						$split-keys[1],
-						'_id$',
-						'_uid'
-					)
-				)"/> -->
+			<xsl:choose>
+				<xsl:when test="$unique-id-map/field[name=$split-keys[1] and type/name='Unique ID']">
+					<xsl:value-of select="rs:normalize-id-type(replace($split-keys[1], '_id$', '_uid'))"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="rs:normalize-id-type($split-keys[1])"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:when>
 		<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
 
@@ -151,8 +139,8 @@
 		<xsl:when test="$type='Text or URL or Email or Phone number'">TranslationValue</xsl:when>
 		<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_id')">RecordId</xsl:when>
 		<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_sub_id')">RecordSubId</xsl:when>
-		<!-- TODO --> <xsl:when test="$type='Foreign ID'">todo!("Foreign ID")</xsl:when>
-		<!-- TODO --> <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!"); {$type}</xsl:when>
+		<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID")</xsl:when> -->
+		<!-- TODO <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!"); {$type}</xsl:when> -->
 
 		<!-- Default Fallback Error (Todo's) -->
 		<xsl:otherwise><xsl:message terminate="yes">[rs:gtfs-type] Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
