@@ -97,13 +97,13 @@
 /** <!-- {./description} -->
  */
 pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
-	<xsl:when test="$typeName='Text'">core:str</xsl:when>
+	<xsl:when test="$typeName='Text'">String</xsl:when>
 	<xsl:when test="$typeName='GtfsEnum'">u32</xsl:when>
 
 
 	<xsl:when test="$typeName='Color'">[u8; 3]</xsl:when>
 
-	<xsl:when test="$typeName='CurrencyCode'">core:str /*ISO 4217*/</xsl:when>
+	<xsl:when test="$typeName='CurrencyCode'">String /*ISO 4217*/</xsl:when>
 	<!-- <xsl:when test="$typeName='CurrencyAmount'">ok!()</xsl:when> -->
 
 	<!-- <xsl:when test="$typeName='Time'">ok!()</xsl:when> -->
@@ -112,13 +112,9 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
 	<!-- <xsl:when test="$typeName='Email'">ok!()</xsl:when> -->
 		<!-- <xsl:when test="$typeName='PhoneNumber'">ok!()</xsl:when> -->
 
-	<xsl:when test="$typeName='GtfsId'">&amp;core::str</xsl:when>
+	<xsl:when test="$typeName='GtfsId'">String</xsl:when>
 
-
-
-
-
-	<xsl:when test="$typeName='Url'">url::Url</xsl:when>
+	<!-- <xsl:when test="$typeName='Url'">url::Url</xsl:when> -->
 
 
 	<!-- <xsl:when test="$typeName='LanguageCode'">ok!()</xsl:when> -->
@@ -190,7 +186,7 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
 <!-- #region Structs -->
 <!-- Call by `@name` because we want access to the whole document -->
 <xsl:template name="definitions">
-use super::types::*;
+use crate::types::*;
 
 /* Structs */
 <xsl:apply-templates mode="struct" select="//definitions/file" />
@@ -199,7 +195,7 @@ use super::types::*;
 <xsl:template mode="struct" match="file">
 /** <!-- {description} -->
 */
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates mode="struct" select="fields/field"/>}}
 </xsl:template>
 
