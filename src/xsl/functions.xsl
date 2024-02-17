@@ -3,12 +3,14 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:saxon="http://saxon.sf.net/"
 	xmlns:rs="https://www.rust-lang.org.kaylafire.me/"
+	xmlns:txt="https://txt.xsl.kaylafire.me/"
 	xmlns:xs="math"
 
 	exclude-result-prefixes="#all"
 	expand-text="yes"
 	version="3.0"
 >
+<xsl:include href="./txt-fns.xsl" />
 
 <xsl:variable name="foreign-prefix" >Foreign ID referencing</xsl:variable>
 
@@ -87,7 +89,7 @@
 		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
 
 		<!-- ID's -->
-		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type($field_name)}</xsl:when>
+		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type(replace($field_name, "_id$", "_uid"))}</xsl:when>
 		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
 		<!-- TODO --> <!-- <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
 		<xsl:when test="rs:is-foreign-id($type)">{rs:normalize-id-type((rs:get-split-foreign-keys($type)/type)[1])}</xsl:when>
@@ -124,75 +126,82 @@
 </xsl:function>
 
 <xsl:function name="rs:map-gtfs-type-to-rust">
-<xsl:param name="typeName"/>
-<xsl:choose>
-	<xsl:when test="$typeName='Text'">String</xsl:when>
-	<xsl:when test="$typeName='GtfsEnum'">u32</xsl:when>
+	<xsl:param name="typeName"/>
+	<xsl:choose>
+		<xsl:when test="$typeName='Text'">String</xsl:when>
+		<xsl:when test="$typeName='GtfsEnum'">u32</xsl:when>
 
-	<xsl:when test="$typeName='Color'">String</xsl:when>
+		<xsl:when test="$typeName='Color'">String</xsl:when>
 
-	<xsl:when test="$typeName='CurrencyCode'">String /*ISO 4217*/</xsl:when>
-	<!-- <xsl:when test="$typeName='CurrencyAmount'">ok!()</xsl:when> -->
+		<xsl:when test="$typeName='CurrencyCode'">String /*ISO 4217*/</xsl:when>
+		<xsl:when test="$typeName='CurrencyAmount'">/* todo!("Missing Type Map!") */ ()</xsl:when>
 
-	<!-- <xsl:when test="$typeName='Time'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Date'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Timezone'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Email'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='PhoneNumber'">ok!()</xsl:when> -->
+		<xsl:when test="$typeName='Time'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='Date'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='Timezone'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='Email'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='PhoneNumber'">/* todo!("Missing Type Map!") */ ()</xsl:when>
 
-	<xsl:when test="$typeName='GtfsId'">String</xsl:when>
+		<xsl:when test="$typeName='GtfsId'">String</xsl:when>
 
-	<!-- <xsl:when test="$typeName='Url'">url::Url</xsl:when> -->
-
-
-	<!-- <xsl:when test="$typeName='LanguageCode'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='TranslationValue'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='RecordId'">GtfsId</xsl:when> -->
-	<!-- <xsl:when test="$typeName='RecordSubId'">GtfsId</xsl:when> -->
+		<xsl:when test="$typeName='Url'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<!-- <xsl:when test="$typeName='Url'">url::Url</xsl:when> -->
 
 
-	<!-- Numerical Types -->
-	<!-- Integers -->
-	<xsl:when test="$typeName='Integer'">i64</xsl:when>
-	<xsl:when test="$typeName='PositiveInteger'">Integer</xsl:when>
-	<xsl:when test="$typeName='NonNullInteger'">Integer</xsl:when>
-	<xsl:when test="$typeName='NonZeroInteger'">Integer</xsl:when>
-
-	<xsl:when test="$typeName='NonNegativeInteger'">u64</xsl:when>
+		<xsl:when test="$typeName='LanguageCode'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='TranslationValue'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='RecordId'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='RecordSubId'">GtfsId</xsl:when>
 
 
-	<!-- Floats -->
-	<xsl:when test="$typeName='Float'">f64</xsl:when>
-	<xsl:when test="$typeName='PositiveFloat'">Float</xsl:when>
-	<xsl:when test="$typeName='NonNegativeFloat'">Float</xsl:when>
+		<!-- Numerical Types -->
+		<!-- Integers -->
+		<xsl:when test="$typeName='Integer'">i64</xsl:when>
+		<xsl:when test="$typeName='PositiveInteger'">Integer</xsl:when>
+		<xsl:when test="$typeName='NonNullInteger'">Integer</xsl:when>
+		<xsl:when test="$typeName='NonZeroInteger'">Integer</xsl:when>
 
-	<xsl:when test="$typeName='Latitude'">Float</xsl:when>
-	<xsl:when test="$typeName='Longitude'">Float</xsl:when>
+		<xsl:when test="$typeName='NonNegativeInteger'">u64</xsl:when>
 
 
-	<!-- Id's -->
-	<xsl:when test="$typeName='AgencyId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='AreaId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='AttributionId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='BlockId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='FareId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='FareMediaId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='FareProductId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='LegGroupId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='LevelId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='NetworkId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='PathwayId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='RouteId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='ServiceId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='ShapeId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='StopId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='TimeframeGroupId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='TripId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='ZoneId'">GtfsId</xsl:when>
+		<!-- Floats -->
+		<xsl:when test="$typeName='Float'">f64</xsl:when>
+		<xsl:when test="$typeName='PositiveFloat'">Float</xsl:when>
+		<xsl:when test="$typeName='NonNegativeFloat'">Float</xsl:when>
 
-	<!-- Fallback -->
-	<xsl:otherwise><xsl:message terminate="no">[rs:map-gtfs-type-to-rust] Warning: Undefined Type: '{$typeName}'</xsl:message>()</xsl:otherwise>
-</xsl:choose>
+		<xsl:when test="$typeName='Latitude'">Float</xsl:when>
+		<xsl:when test="$typeName='Longitude'">Float</xsl:when>
+
+
+		<!-- Id's -->
+		<xsl:when test="$typeName='AgencyUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='Uid'">GtfsId</xsl:when>
+
+		<xsl:when test="$typeName='AgencyUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='StopUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='RouteUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='TripUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='ServiceUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='FareUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='FareMediaUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='AreaUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='NetworkUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='PathwayUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='LevelUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='AttributionUid'">GtfsId</xsl:when>
+
+
+		<xsl:when test="$typeName='BlockId'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='FareProductId'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='LegGroupId'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='NetworkId'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='ShapeId'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='TimeframeGroupId'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='ZoneId'">GtfsId</xsl:when>
+
+		<!-- Fallback -->
+		<xsl:otherwise><xsl:message terminate="yes">[rs:map-gtfs-type-to-rust] Warning: Undefined Type: '{$typeName}'</xsl:message>()</xsl:otherwise>
+	</xsl:choose>
 </xsl:function>
 
 <xsl:function name="rs:struct-name-from-filename">
@@ -201,16 +210,9 @@
 	<xsl:text>{rs:normalize-id-type($name)}</xsl:text>
 </xsl:function>
 
-<xsl:function name="rs:normalize-title-case">
-	<xsl:param name="strings" />
-	<xsl:for-each select="$strings">
-		<xsl:text>{concat(upper-case(substring(., 1,1)), substring(., 2))}</xsl:text>
-	</xsl:for-each>
-</xsl:function>
-
 <xsl:function name="rs:normalize-id-type">
 	<xsl:param name="id" />
-	<xsl:text>{rs:normalize-title-case(tokenize($id, "_"))}</xsl:text>
+	<xsl:text>{txt:normalize-title-case(tokenize($id, "_"))}</xsl:text>
 </xsl:function>
 
 <!-- <xsl:key
