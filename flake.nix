@@ -107,6 +107,7 @@
 					packages = [
 						pkgs.saxon-he
 						pkgs.entr
+						pkgs.evcxr
 						pkgs.rustc
 						pkgs.cargo
 						pkgs.clippy
