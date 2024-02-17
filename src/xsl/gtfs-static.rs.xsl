@@ -111,10 +111,7 @@
 <xsl:variable name="typeName"><xsl:apply-templates select="." mode="type" /></xsl:variable>
 /** <!-- {./description} -->
  */
-pub type {$typeName} = <xsl:choose>
-	<xsl:when test="name/text()/normalize-space()='Unique ID'">ID!</xsl:when>
-	<xsl:otherwise>{trace(contains(., 'Unique ID'))}()</xsl:otherwise>
-</xsl:choose>;
+pub type {$typeName} = ();
 </xsl:for-each>
 </xsl:template>
 
@@ -126,6 +123,7 @@ use super::types::*;
 <xsl:variable name="struct-name" select="rs:struct-name-from-filename(name)" />
 /** <!-- {description} -->
 */
+#[derive(Debug, Copy, Clone)]
 pub struct {$struct-name} {{
 <xsl:for-each select="fields/field">
 	/** <!-- {./description} -->
