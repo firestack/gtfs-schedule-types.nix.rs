@@ -23,22 +23,8 @@
 	</xsl:result-document>
 </xsl:template>
 
-<xsl:key
-	name="typesDistinct"
-	match="//types/type | //fields/field"
->
-	<xsl:apply-templates select="." mode="type"/>
-</xsl:key>
-
-<xsl:template match="field/type" mode="type">
-	<xsl:copy-of select="rs:gtfs-type(name, ../presence, ../name)" />
-</xsl:template>
-
-<xsl:template match="types/type" mode="type">
-	<xsl:copy-of select='rs:gtfs-type(name, "unknown", "GtfsId")' />
-</xsl:template>
-
 <!-- #endregion Types -->
+<!-- Call by `@name` because we want access to the whole document -->
 <xsl:template name="types">
 /* Types */
 
@@ -107,13 +93,85 @@
 </xsl:template>
 
 <xsl:template mode="type-definition" match=".">
+<xsl:variable name="typeName"><xsl:apply-templates select="." mode="type" /></xsl:variable>
 /** <!-- {./description} -->
  */
-pub type <xsl:apply-templates select="." mode="type" /> = ();
+pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
+	<!-- <xsl:when test="$typeName='Color'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='CurrencyCode'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='CurrencyAmount'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Date'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Email'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='GtfsEnum'">ok!()</xsl:when> -->
+	<xsl:when test="$typeName='GtfsId'">&amp;core::str</xsl:when>
+	<!-- <xsl:when test="$typeName='LanguageCode'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Latitude'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Longitude'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Float'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Integer'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='PhoneNumber'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Time'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Text'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Timezone'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Url'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='NonZeroInteger'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='PositiveInteger'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='NonNullInteger'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='PositiveFloat'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='TranslationValue'">ok!()</xsl:when> -->
+
+	<!-- Id's -->
+	<xsl:when test="$typeName='AgencyId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='StopId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='RouteId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='TripId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='FareId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='FareMediaId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='PathwayId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='AttributionId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='ZoneId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='NetworkId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='BlockId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='TimeframeGroupId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='FareProductId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='LegGroupId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='LevelId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='NonNegativeInteger'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='ServiceId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='ShapeId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='NonNegativeFloat'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='AreaId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='RecordId'">GtfsId</xsl:when>
+	<xsl:when test="$typeName='RecordSubId'">GtfsId</xsl:when>
+
+	<!-- Fallback -->
+	<xsl:otherwise>()</xsl:otherwise>
+</xsl:choose>;
 </xsl:template>
+
+
+<!-- #region Type Formatting -->
+<!-- Type `XML -> Rust` Formatting -->
+<xsl:key
+	name="typesDistinct"
+	match="//types/type | //fields/field"
+>
+	<xsl:apply-templates mode="type" select="."/>
+</xsl:key>
+
+<xsl:template mode="type" match="field/type">
+	<xsl:copy-of select="rs:gtfs-type(name, ../presence, ../name)" />
+</xsl:template>
+
+<xsl:template mode="type" match="types/type">
+	<xsl:copy-of select='rs:gtfs-type(name, "unknown", "GtfsId")' />
+</xsl:template>
+<!-- #endregion Type Formatting -->
+
 <!-- #endregion Types -->
 
 <!-- #region Structs -->
+<!-- Call by `@name` because we want access to the whole document -->
 <xsl:template name="definitions">
 use super::types::*;
 
