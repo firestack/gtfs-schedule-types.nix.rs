@@ -101,7 +101,7 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
 	<xsl:when test="$typeName='GtfsEnum'">u32</xsl:when>
 
 
-	<xsl:when test="$typeName='Color'">[u8; 3]</xsl:when>
+	<xsl:when test="$typeName='Color'">String</xsl:when>
 
 	<xsl:when test="$typeName='CurrencyCode'">String /*ISO 4217*/</xsl:when>
 	<!-- <xsl:when test="$typeName='CurrencyAmount'">ok!()</xsl:when> -->
@@ -123,16 +123,18 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
 	<!-- <xsl:when test="$typeName='RecordSubId'">GtfsId</xsl:when> -->
 
 
-
-	<xsl:when test="$typeName='Latitude'">Float</xsl:when>
-	<xsl:when test="$typeName='Longitude'">Float</xsl:when>
-
-	<xsl:when test="$typeName='Float'">f64</xsl:when>
+	<!-- Numerical Types -->
 	<xsl:when test="$typeName='Integer'">i64</xsl:when>
 	<xsl:when test="$typeName='NonZeroInteger'">Integer</xsl:when>
 	<xsl:when test="$typeName='PositiveInteger'">Integer</xsl:when>
 	<xsl:when test="$typeName='NonNullInteger'">Integer</xsl:when>
+
+	<xsl:when test="$typeName='Float'">f64</xsl:when>
 	<xsl:when test="$typeName='PositiveFloat'">Float</xsl:when>
+
+	<xsl:when test="$typeName='Latitude'">Float</xsl:when>
+	<xsl:when test="$typeName='Longitude'">Float</xsl:when>
+
 
 
 	<!-- Id's -->
