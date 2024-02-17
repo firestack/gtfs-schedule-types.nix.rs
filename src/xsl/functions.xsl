@@ -48,6 +48,10 @@
 	<xsl:copy-of select="starts-with($type-string, $foreign-prefix)"/>
 </xsl:function> -->
 
+<!-- <xsl:function name="">
+{rs:normalize-id-type(replace($field_name, "_id$", "_uid"))}
+</xsl:function> -->
+
 <xsl:function name="rs:get-distinct-types">
 	<xsl:param name="nodes"/>
 	<xsl:variable name="distinct-types">
@@ -92,7 +96,17 @@
 		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type(replace($field_name, "_id$", "_uid"))}</xsl:when>
 		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
 		<!-- TODO --> <!-- <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
-		<xsl:when test="rs:is-foreign-id($type)">{rs:normalize-id-type((rs:get-split-foreign-keys($type)/type)[1])}</xsl:when>
+		<xsl:when test="rs:is-foreign-id($type)">
+			<!--
+				We're taking a shortcut with the `[1]` because
+				right now all foreign keys reference the same key and not any pairs
+				[revisit!]
+			-->
+			<xsl:value-of select="
+				rs:normalize-id-type(
+					(rs:get-split-foreign-keys($type)/type)[1]
+				)"/>
+		</xsl:when>
 		<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
 
 		<!-- Integer and Float Types -->
@@ -174,9 +188,6 @@
 
 
 		<!-- Id's -->
-		<xsl:when test="$typeName='AgencyUid'">GtfsId</xsl:when>
-		<xsl:when test="$typeName='Uid'">GtfsId</xsl:when>
-
 		<xsl:when test="$typeName='AgencyUid'">GtfsId</xsl:when>
 		<xsl:when test="$typeName='StopUid'">GtfsId</xsl:when>
 		<xsl:when test="$typeName='RouteUid'">GtfsId</xsl:when>
