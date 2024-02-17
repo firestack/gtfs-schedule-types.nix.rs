@@ -4,7 +4,12 @@
 	inputs.devshell.url = "github:numtide/devshell";
 	inputs.flake-parts.url = "github:hercules-ci/flake-parts";
 
-	outputs = inputs@{ self, flake-parts, devshell, nixpkgs }:
+	inputs.crane = {
+		url = "github:ipetkov/crane";
+		inputs.nixpkgs.follows = "nixpkgs";
+	};
+
+	outputs = inputs@{ self, flake-parts, devshell, nixpkgs, crane }:
 		flake-parts.lib.mkFlake { inherit inputs; } {
 			imports = [
 				devshell.flakeModule
@@ -18,7 +23,25 @@
 				"x86_64-linux"
 			];
 
-			perSystem = { pkgs, lib, self', ... }: let linesFrom = lib.concatStringsSep "\n"; in {
+			perSystem = { pkgs, lib, self', system, ... }: let
+				craneLib = crane.lib.${system};
+
+				my-crate = craneLib.buildPackage {
+					src = craneLib.cleancargosource (craneLib.path ./.);
+					strictdeps = true;
+
+					buildInputs = [
+						# Add additional build inputs here
+					] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+						# Additional darwin specific inputs can be set here
+						pkgs.libiconv
+					];
+
+					# Additional environment variables can be set directly
+					# MY_CUSTOM_VAR = "some value";
+				};
+				linesFrom = lib.concatStringsSep "\n";
+			in {
 				packages.gtfs-static-html = pkgs.fetchurl {
 					name = "gtfs-static.html";
 					url = "https://gtfs.org/schedule/reference";
@@ -78,10 +101,16 @@
 
 				};
 
+				legacyPackages = { inherit craneLib; };
+
 				devshells.default = {
 					packages = [
 						pkgs.saxon-he
 						pkgs.entr
+						pkgs.rustc
+						pkgs.cargo
+						pkgs.clippy
+						pkgs.rustfmt
 					];
 
 					commands = [{
