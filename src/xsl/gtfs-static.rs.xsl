@@ -32,7 +32,17 @@
 <!-- Root Template -->
 <xsl:template match="/gtfs-static" mode="#default" saxon:explain="yes" >
 	<xsl:result-document href="gtfs-static/types.rs" method="text">
-		<!-- <xsl:apply-templates select="types"/> -->
+		<xsl:call-template name="types"/>
+	</xsl:result-document>
+	<xsl:result-document href="gtfs-static/files.rs" method="text">
+		<xsl:text>use super::types::*;
+</xsl:text>
+
+		<xsl:apply-templates select="definitions"/>
+	</xsl:result-document>
+</xsl:template>
+
+<xsl:template name="types">
 /* Types */
 <xsl:for-each select="//types/type | //fields/field[generate-id() = generate-id(key('typesDistinct', rs:gtfs-type(type, '', id))[1])]/type">
 <!-- <xsl:for-each select="types/type | //fields/field/type"> -->
@@ -46,17 +56,6 @@ pub type <xsl:choose>
 
 
 </xsl:for-each>
-	</xsl:result-document>
-	<xsl:result-document href="gtfs-static/files.rs" method="text">
-		<xsl:text>use super::types::*;
-</xsl:text>
-
-		<xsl:apply-templates select="definitions"/>
-	</xsl:result-document>
-</xsl:template>
-
-<xsl:template match="types">
-
 </xsl:template>
 
 <xsl:template match="definitions">
