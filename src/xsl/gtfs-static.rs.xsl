@@ -32,11 +32,11 @@
 <xsl:apply-templates mode="type-definition" select="//types/type"/>
 // #endregion Field Types
 
+////////////////////////////////////////////////////////////////////////////////
+
 // #region Unique Id Types
 <xsl:apply-templates mode="type-definition" select="
 	//fields/field[
-		type/name='Unique ID'
-		and
 		generate-id()
 			= generate-id(
 				key(
@@ -46,16 +46,16 @@
 						'',
 						name
 					)
-			)[1]
+			)[type/name='Unique ID']
 		)]
 		/type"/>
 // #endregion Unique Id Types
 
+////////////////////////////////////////////////////////////////////////////////
+
 // #region Id Types
 <xsl:apply-templates mode="type-definition" select="
 	//fields/field[
-		type/name='ID'
-		and
 		generate-id()
 			= generate-id(
 				key(
@@ -65,16 +65,19 @@
 						'',
 						name
 					)
-			)[1]
+			)[type/name='ID']
 		)]
 		/type"/>
 // #endregion Id Types
 
+////////////////////////////////////////////////////////////////////////////////
+
 // #region Other Types
 <xsl:apply-templates mode="type-definition" select="
 	//fields/field[
-		type/name!='ID' and
-		type/name!='Unique ID' and
+		not(type/name='ID') and
+		not(type/name='Unique ID') and
+		not(rs:is-foreign-id(type/name)) and
 
 		generate-id()
 			= generate-id(
@@ -94,7 +97,7 @@
 
 <xsl:template mode="type-definition" match=".">
 <xsl:variable name="typeName"><xsl:apply-templates select="." mode="type" /></xsl:variable>
-/** <!-- {./description} -->
+/** <!-- {./description} --> '{name}'
  */
 pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-type-to-rust($typeName)"/>;
 </xsl:template>

@@ -119,7 +119,7 @@
 		<!-- TODO --> <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!"); {$type}</xsl:when>
 
 		<!-- Default Fallback Error (Todo's) -->
-		<xsl:otherwise><xsl:message terminate="yes">Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
+		<xsl:otherwise><xsl:message terminate="yes">[rs:gtfs-type] Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
 	 </xsl:choose>
 </xsl:function>
 
@@ -191,7 +191,7 @@
 	<xsl:when test="$typeName='ZoneId'">GtfsId</xsl:when>
 
 	<!-- Fallback -->
-	<xsl:otherwise>()</xsl:otherwise>
+	<xsl:otherwise><xsl:message terminate="no">[rs:map-gtfs-type-to-rust] Warning: Undefined Type: '{$typeName}'</xsl:message>()</xsl:otherwise>
 </xsl:choose>
 </xsl:function>
 
