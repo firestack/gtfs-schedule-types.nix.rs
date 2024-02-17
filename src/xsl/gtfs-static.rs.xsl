@@ -13,8 +13,16 @@
 <xsl:output method="text" />
 <xsl:strip-space elements="*"/>
 
+<xsl:variable name="unique-field-id-map">
+	<xsl:copy-of select="//fields/field[type/name='Unique ID' or type/name='ID']"/>
+</xsl:variable>
 <!-- Root Template -->
 <xsl:template match="/gtfs-static" mode="#default" saxon:explain="yes" >
+
+	<xsl:result-document href="gtfs-static/search.xml" method="xml" indent="yes">
+		<xsl:copy-of select="$unique-field-id-map"/>
+	</xsl:result-document>
+
 	<xsl:result-document href="gtfs-static/types.rs" method="text">
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
@@ -44,7 +52,8 @@
 					rs:gtfs-type(
 						type/name,
 						'',
-						name
+						name,
+						$unique-field-id-map
 					)
 			)[type/name='Unique ID']
 		)]
@@ -63,7 +72,8 @@
 					rs:gtfs-type(
 						type/name,
 						'',
-						name
+						name,
+						$unique-field-id-map
 					)
 			)[type/name='ID']
 		)]
@@ -86,7 +96,8 @@
 					rs:gtfs-type(
 						type/name,
 						'',
-						name
+						name,
+						$unique-field-id-map
 					)
 			)[1]
 		)]
@@ -111,12 +122,14 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-
 	<xsl:apply-templates mode="type" select="."/>
 </xsl:key>
 
+<!-- <xsl:key name="" match=""></xsl:key> -->
+
 <xsl:template mode="type" match="field/type">
-	<xsl:copy-of select="rs:gtfs-type(name, ../presence, ../name)" />
+	<xsl:copy-of select="rs:gtfs-type(name, ../presence, ../name, $unique-field-id-map)" />
 </xsl:template>
 
 <xsl:template mode="type" match="types/type">
-	<xsl:copy-of select='rs:gtfs-type(name, "unknown", "GtfsId")' />
+	<xsl:copy-of select='rs:gtfs-type(name, "unknown", "GtfsId", $unique-field-id-map)' />
 </xsl:template>
 <!-- #endregion Type Formatting -->
 
@@ -135,13 +148,16 @@ use crate::types::*;
 /** <!-- {description} -->
 */
 #[derive(Debug, Clone)]
-pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates mode="struct" select="fields/field"/>}}
+pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
+	mode="struct"
+	select="fields/field"
+/>}}
 </xsl:template>
 
 <xsl:template mode="struct" match="field" >
 	/** <!-- {./description} -->
 	 */
-	pub {name}: {rs:gtfs-type(type, presence, name)},
+	pub {name}: {rs:gtfs-type(type, presence, name, $unique-field-id-map)},
 </xsl:template>
 <!-- #endregion Structs -->
 
