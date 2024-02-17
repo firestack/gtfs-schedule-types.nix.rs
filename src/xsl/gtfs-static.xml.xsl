@@ -35,7 +35,7 @@
 
 <xsl:template match="x:*" mode="field-type">
 	<type>
-		<id>{x:strong}</id>
+		<name>{x:strong}</name>
 		<description>
 			<xsl:copy-of select="node()" />
 		</description>
@@ -54,6 +54,8 @@
 		id="{./text()/normalize-space()}"
 		presence="{./following-sibling::x:p[1]/x:strong/text()}"
 	>
+		<name>{./text()/normalize-space()}</name>
+		<presence>{./following-sibling::x:p[1]/x:strong/text()}</presence>
 		<primary-key>
 			<xsl:for-each select="./following-sibling::x:p[2]/x:code">
 				<key>{./text()}</key>
@@ -69,8 +71,8 @@
 
 <xsl:template match="x:tr" mode="file-field">
 	<field>
-		<id>{x:td[1]/node()}</id>
-		<type><id>{x:td[2]/node()}</id></type>
+		<name>{x:td[1]/node()}</name>
+		<type><name>{x:td[2]/node()}</name></type>
 		<presence>{x:td[3]/node()}</presence>
 		<!-- <description><xsl:copy-of select="x:td[4]/node()"/></description> -->
 	</field>

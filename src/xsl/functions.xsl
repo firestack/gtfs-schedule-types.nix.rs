@@ -118,9 +118,8 @@
 		<!-- TODO --> <xsl:when test="$type='Foreign ID'">todo!("Foreign ID")</xsl:when>
 		<!-- TODO --> <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!"); {$type}</xsl:when>
 
-		<xsl:otherwise>todo!("fallback") {$type}</xsl:otherwise>
 		<!-- Default Fallback Error (Todo's) -->
-		<!-- <xsl:otherwise><xsl:message terminate="yes">Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise> -->
+		<xsl:otherwise><xsl:message terminate="no">Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
 	 </xsl:choose>
 </xsl:function>
 
@@ -141,5 +140,15 @@
 	<xsl:param name="id" />
 	<xsl:text>{rs:normalize-title-case(tokenize($id, "_"))}</xsl:text>
 </xsl:function>
+
+<!-- <xsl:key
+	name="typesDistinct"
+	match="//fields/field | //types/type"
+>
+	<xsl:choose>
+		<xsl:when test="../id">{rs:gtfs-type(id, ../presence, ../id)}</xsl:when>
+		<xsl:otherwise>{rs:gtfs-type(id, "", id)}</xsl:otherwise>
+	</xsl:choose>
+</xsl:key> -->
 
 </xsl:stylesheet>
