@@ -97,28 +97,47 @@
 /** <!-- {./description} -->
  */
 pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
-	<!-- <xsl:when test="$typeName='Color'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='CurrencyCode'">ok!()</xsl:when> -->
+	<xsl:when test="$typeName='Text'">core:str</xsl:when>
+	<xsl:when test="$typeName='GtfsEnum'">u32</xsl:when>
+
+
+	<xsl:when test="$typeName='Color'">[u8; 3]</xsl:when>
+
+	<xsl:when test="$typeName='CurrencyCode'">core:str /*ISO 4217*/</xsl:when>
 	<!-- <xsl:when test="$typeName='CurrencyAmount'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Date'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Email'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='GtfsEnum'">ok!()</xsl:when> -->
-	<xsl:when test="$typeName='GtfsId'">&amp;core::str</xsl:when>
-	<!-- <xsl:when test="$typeName='LanguageCode'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Latitude'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Longitude'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Float'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Integer'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='PhoneNumber'">ok!()</xsl:when> -->
+
 	<!-- <xsl:when test="$typeName='Time'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Text'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Date'">ok!()</xsl:when> -->
 	<!-- <xsl:when test="$typeName='Timezone'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='Url'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='NonZeroInteger'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='PositiveInteger'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='NonNullInteger'">ok!()</xsl:when> -->
-	<!-- <xsl:when test="$typeName='PositiveFloat'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='Email'">ok!()</xsl:when> -->
+		<!-- <xsl:when test="$typeName='PhoneNumber'">ok!()</xsl:when> -->
+
+	<xsl:when test="$typeName='GtfsId'">&amp;core::str</xsl:when>
+
+
+
+
+
+	<xsl:when test="$typeName='Url'">url::Url</xsl:when>
+
+
+	<!-- <xsl:when test="$typeName='LanguageCode'">ok!()</xsl:when> -->
 	<!-- <xsl:when test="$typeName='TranslationValue'">ok!()</xsl:when> -->
+	<!-- <xsl:when test="$typeName='RecordId'">GtfsId</xsl:when> -->
+	<!-- <xsl:when test="$typeName='RecordSubId'">GtfsId</xsl:when> -->
+
+
+
+	<xsl:when test="$typeName='Latitude'">Float</xsl:when>
+	<xsl:when test="$typeName='Longitude'">Float</xsl:when>
+
+	<xsl:when test="$typeName='Float'">f64</xsl:when>
+	<xsl:when test="$typeName='Integer'">i64</xsl:when>
+	<xsl:when test="$typeName='NonZeroInteger'">Integer</xsl:when>
+	<xsl:when test="$typeName='PositiveInteger'">Integer</xsl:when>
+	<xsl:when test="$typeName='NonNullInteger'">Integer</xsl:when>
+	<xsl:when test="$typeName='PositiveFloat'">Float</xsl:when>
+
 
 	<!-- Id's -->
 	<xsl:when test="$typeName='AgencyId'">GtfsId</xsl:when>
@@ -141,8 +160,6 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:choose>
 	<xsl:when test="$typeName='ShapeId'">GtfsId</xsl:when>
 	<xsl:when test="$typeName='NonNegativeFloat'">GtfsId</xsl:when>
 	<xsl:when test="$typeName='AreaId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='RecordId'">GtfsId</xsl:when>
-	<xsl:when test="$typeName='RecordSubId'">GtfsId</xsl:when>
 
 	<!-- Fallback -->
 	<xsl:otherwise>()</xsl:otherwise>
