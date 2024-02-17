@@ -38,6 +38,7 @@
 	<xsl:copy-of select='rs:gtfs-type(name, "unknown", "GtfsId")' />
 </xsl:template>
 
+<!-- #endregion Types -->
 <xsl:template name="types">
 /* Types */
 
@@ -106,32 +107,32 @@
 </xsl:template>
 
 <xsl:template mode="type-definition" match=".">
-<xsl:for-each select=".">
-<xsl:sort select="rs:gtfs-type(./name, 'unknown', 'GtfsId')"/>
-<xsl:variable name="typeName"><xsl:apply-templates select="." mode="type" /></xsl:variable>
 /** <!-- {./description} -->
  */
-pub type {$typeName} = ();
-</xsl:for-each>
+pub type <xsl:apply-templates select="." mode="type" /> = ();
 </xsl:template>
+<!-- #endregion Types -->
 
+<!-- #region Structs -->
 <xsl:template name="definitions">
 use super::types::*;
 
 /* Structs */
-<xsl:for-each select="//definitions/file">
-<xsl:variable name="struct-name" select="rs:struct-name-from-filename(name)" />
+<xsl:apply-templates mode="struct" select="//definitions/file" />
+</xsl:template>
+
+<xsl:template mode="struct" match="file">
 /** <!-- {description} -->
 */
 #[derive(Debug, Copy, Clone)]
-pub struct {$struct-name} {{
-<xsl:for-each select="fields/field">
+pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates mode="struct" select="fields/field"/>}}
+</xsl:template>
+
+<xsl:template mode="struct" match="field" >
 	/** <!-- {./description} -->
 	 */
 	pub {name}: {rs:gtfs-type(type, presence, name)},
-</xsl:for-each>
-}}
-</xsl:for-each>
 </xsl:template>
+<!-- #endregion Structs -->
 
 </xsl:stylesheet>
