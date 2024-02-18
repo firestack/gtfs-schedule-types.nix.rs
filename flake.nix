@@ -86,7 +86,7 @@
 
 				packages.gtfs-static-rs = pkgs.stdenvNoCC.mkDerivation {
 					pname = "gtfs-static-rs";
-					version = "0.0.1";
+					version = "0.0.2";
 
 					src = ./src/xsl;
 
