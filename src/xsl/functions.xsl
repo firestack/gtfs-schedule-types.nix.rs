@@ -145,18 +145,23 @@
 			<xsl:otherwise><xsl:message terminate="yes">[rs:gtfs-type] Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	<xsl:value-of select="rs:wrap-type-with-presence($presence, $typename)"/>
+</xsl:function>
+
+<xsl:function name="rs:wrap-type-with-presence">
+	<xsl:param name="presence"/>
+	<xsl:param name="typename"/>
 	<xsl:choose>
-		<!-- <xsl:when test="$presence='Required' or $presence=''"><xsl:value-of select="$typename"/></xsl:when>
-		<xsl:otherwise>Option&lt;{$typename}&gt;</xsl:otherwise> -->
 		<xsl:when test="
 			$presence='Optional' or
 			$presence='Conditionally Required' or
 			$presence='Conditionally Forbidden' or
 			$presence='Recommended'
-		">Option&lt;{$typename}&gt;</xsl:when>
+			">
+			<xsl:text>Option&lt;{$typename}&gt;</xsl:text>
+		</xsl:when>
 		<xsl:otherwise><xsl:value-of select="$typename"/></xsl:otherwise>
 	</xsl:choose>
-
 </xsl:function>
 
 <xsl:function name="rs:map-gtfs-type-to-rust">
@@ -168,22 +173,22 @@
 		<xsl:when test="$typeName='Color'">String</xsl:when>
 
 		<xsl:when test="$typeName='CurrencyCode'">String /*ISO 4217*/</xsl:when>
-		<xsl:when test="$typeName='CurrencyAmount'">/* todo!("Missing Type Map!") */ Text</xsl:when>
+		<xsl:when test="$typeName='CurrencyAmount'">Text</xsl:when>
 
-		<xsl:when test="$typeName='Time'">/* todo!("Missing Type Map!") */ Text</xsl:when>
-		<xsl:when test="$typeName='Date'">/* todo!("Missing Type Map!") */ Text</xsl:when>
-		<xsl:when test="$typeName='Timezone'">/* todo!("Missing Type Map!") */ Text</xsl:when>
-		<xsl:when test="$typeName='Email'">/* todo!("Missing Type Map!") */ Text</xsl:when>
-		<xsl:when test="$typeName='PhoneNumber'">/* todo!("Missing Type Map!") */ Text</xsl:when>
+		<xsl:when test="$typeName='Time'">Text</xsl:when>
+		<xsl:when test="$typeName='Date'">Text</xsl:when>
+		<xsl:when test="$typeName='Timezone'">Text</xsl:when>
+		<xsl:when test="$typeName='Email'">Text</xsl:when>
+		<xsl:when test="$typeName='PhoneNumber'">Text</xsl:when>
 
 		<xsl:when test="$typeName='GtfsId'">String</xsl:when>
 
-		<xsl:when test="$typeName='Url'">/* todo!("Missing Type Map!") */ Text</xsl:when>
+		<xsl:when test="$typeName='Url'">Text</xsl:when>
 		<!-- <xsl:when test="$typeName='Url'">url::Url</xsl:when> -->
 
 
-		<xsl:when test="$typeName='LanguageCode'">/* todo!("Missing Type Map!") */ ()</xsl:when>
-		<xsl:when test="$typeName='TranslationValue'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='LanguageCode'">Text</xsl:when>
+		<xsl:when test="$typeName='TranslationValue'">Text</xsl:when>
 		<xsl:when test="$typeName='RecordId'">GtfsId</xsl:when>
 		<xsl:when test="$typeName='RecordSubId'">GtfsId</xsl:when>
 

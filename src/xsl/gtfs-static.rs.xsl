@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE example [
+	<!ENTITY bt "<xsl:text>`</xsl:text>">
+]>
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:saxon="http://saxon.sf.net/"
@@ -38,7 +41,19 @@
 <!-- #endregion Types -->
 <!-- Call by `@name` because we want access to the whole document -->
 <xsl:template name="types">
+use crate::files::*;
+
 /* Types */
+
+pub struct GtfsStatic {{
+<xsl:for-each select="//file">
+	/** &bt;{name}&bt;
+	 *
+	 * {presence}
+	 */
+	pub {substring-before(name, '.txt')}: {rs:wrap-type-with-presence(presence, concat("Vec&lt;", rs:struct-name-from-filename(name), "&gt;"))},
+</xsl:for-each>
+}}
 
 // #region Field Types
 <xsl:apply-templates mode="type-definition" select="//types/type"/>

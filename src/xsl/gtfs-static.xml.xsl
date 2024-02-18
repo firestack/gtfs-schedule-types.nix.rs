@@ -76,7 +76,7 @@
 		<name>{x:td[1]/node()}</name>
 		<type><name>{x:td[2]/node()}</name></type>
 		<presence>{x:td[3]/node()}</presence>
-		<!-- <description><x:body><xsl:copy-of select="x:td[4]/node()"/></x:body></description> -->
+		<description><x:body><xsl:copy-of select="x:td[4]/node()"/></x:body></description>
 	</field>
 </xsl:template>
 </xsl:stylesheet>
