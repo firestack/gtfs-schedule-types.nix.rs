@@ -37,7 +37,9 @@
 	<type>
 		<name>{x:strong}</name>
 		<description>
-			<xsl:copy-of select="node()" />
+			<x:body>
+				<xsl:copy-of select="node()" />
+			</x:body>
 		</description>
 	</type>
 </xsl:template>
@@ -61,8 +63,8 @@
 				<key>{./text()}</key>
 			</xsl:for-each>
 		</primary-key>
-		<!-- <description>{//x:tr[./x:a[href=@id]]}</description> -->
-		<!-- <description>{./following-sibling::*[contains(., "Primary key")]/following-sibling::*[1]}</description> -->
+		<!-- <description><x:body>{//x:tr[./x:a[href=@id]]}</x:body></description> -->
+		<!-- <description><x:body>{./following-sibling::*[contains(., "Primary key")]/following-sibling::*[1]}</x:body></description> -->
 		<fields>
 			<xsl:apply-templates select="(./following::x:table)[1]/x:tbody/x:tr" mode="file-field" />
 		</fields>
@@ -74,7 +76,7 @@
 		<name>{x:td[1]/node()}</name>
 		<type><name>{x:td[2]/node()}</name></type>
 		<presence>{x:td[3]/node()}</presence>
-		<!-- <description><xsl:copy-of select="x:td[4]/node()"/></description> -->
+		<!-- <description><x:body><xsl:copy-of select="x:td[4]/node()"/></x:body></description> -->
 	</field>
 </xsl:template>
 </xsl:stylesheet>

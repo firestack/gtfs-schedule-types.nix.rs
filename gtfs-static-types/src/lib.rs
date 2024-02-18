@@ -1,7 +1,7 @@
 //! GTFS Static Types
 //!
 
-/// Provides data types of GTFS Static
+/// Data types derived from GTFS Static
 pub mod types;
-/// Provides struct definitions of the fields in files of GTFS Static
+/// Struct definitions derived from the files and fields of GTFS Static
 pub mod files;

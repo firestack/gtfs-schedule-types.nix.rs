@@ -4,13 +4,15 @@
 	xmlns:saxon="http://saxon.sf.net/"
 	xmlns:rs="https://www.rust-lang.org.kaylafire.me/"
 	xmlns:xs="math"
+	xmlns:x="http://www.w3.org/1999/xhtml"
 
 	exclude-result-prefixes="#all"
 	expand-text="yes"
 	version="3.0"
 >
+<xsl:import href="./markdown.xsl" />
 <xsl:include href="./functions.xsl" />
-<xsl:output method="text" />
+<xsl:output method="adaptive" />
 <xsl:strip-space elements="*"/>
 
 <xsl:variable name="unique-field-id-map">
@@ -108,7 +110,7 @@
 
 <xsl:template mode="type-definition" match=".">
 <xsl:variable name="typeName"><xsl:apply-templates select="." mode="type" /></xsl:variable>
-/** <!-- {./description} --> '{name}'
+/** <xsl:copy-of select="description/x:body"/>
  */
 pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-type-to-rust($typeName)"/>;
 </xsl:template>
@@ -145,9 +147,9 @@ use crate::types::*;
 </xsl:template>
 
 <xsl:template mode="struct" match="file">
-/** <!-- {description} -->
-*/
-#[derive(Debug, Clone)]
+/** {name}
+ */
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
 pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
 	mode="struct"
 	select="fields/field"
@@ -155,7 +157,8 @@ pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
 </xsl:template>
 
 <xsl:template mode="struct" match="field" >
-	/** <!-- {./description} -->
+	/** {description}
+	 <!-- * {presence} -->
 	 */
 	pub {name}: {rs:gtfs-type(type, presence, name, $unique-field-id-map)},
 </xsl:template>

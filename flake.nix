@@ -42,6 +42,13 @@
 				};
 				linesFrom = lib.concatStringsSep "\n";
 			in {
+				packages.mbta-gtfs = pkgs.fetchzip {
+					name = "MBTA GTFS Static";
+					url = "https://cdn.mbtace.com/archive/20240111.zip";
+					stripRoot = false;
+					hash = "sha256-QGLOPY9CVbW6BjcjBt2UmMh5tOeeozwE92p+vnZoK1o=";
+				};
+
 				packages.gtfs-static-html = pkgs.fetchurl {
 					name = "gtfs-static.html";
 					url = "https://gtfs.org/schedule/reference";
