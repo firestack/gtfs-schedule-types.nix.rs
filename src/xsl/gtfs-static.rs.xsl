@@ -46,15 +46,18 @@ use crate::files::*;
 
 /* Types */
 
+/**
+ * Container referencing all files contained in a GTFS Static directory
+ */
+#[derive(Debug)]
 pub struct GtfsStatic {{
 <xsl:for-each select="//file">
-	/** &bt;{name}&bt;
+/** __File Name:__ &bt;{name}&bt;
 
-	{presence}
+__Presence:__ {presence}
 
-	## Description
-	{description}
-	 */
+{serialize(description/summary/node(), $xml-serialize-opts)}
+*/
 	pub {substring-before(name, '.txt')}: {rs:wrap-type-with-presence(presence, concat("Vec&lt;", rs:struct-name-from-filename(name), "&gt;"))},
 </xsl:for-each>
 }}
