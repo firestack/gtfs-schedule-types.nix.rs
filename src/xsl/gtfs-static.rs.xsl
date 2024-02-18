@@ -22,7 +22,9 @@
 <xsl:template match="/gtfs-static" mode="#default" saxon:explain="yes" >
 
 	<xsl:result-document href="gtfs-static/search.xml" method="xml" indent="yes">
-		<xsl:copy-of select="$unique-field-id-map"/>
+		<xsl:for-each select="distinct-values(//field/presence)">
+			<xsl:copy-of select="."/>
+		</xsl:for-each>
 	</xsl:result-document>
 
 	<xsl:result-document href="gtfs-static/types.rs" method="text">
@@ -127,7 +129,7 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-
 <!-- <xsl:key name="" match=""></xsl:key> -->
 
 <xsl:template mode="type" match="field/type">
-	<xsl:copy-of select="rs:gtfs-type(name, ../presence, ../name, $unique-field-id-map)" />
+	<xsl:copy-of select="rs:gtfs-type(name, '', ../name, $unique-field-id-map)" />
 </xsl:template>
 
 <xsl:template mode="type" match="types/type">

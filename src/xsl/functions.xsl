@@ -77,73 +77,86 @@
 </xsl:function>
 
 <xsl:function name="rs:gtfs-type">
-	 <xsl:param name="type" />
-	 <xsl:param name="presence" />
-	 <xsl:param name="field_name" />
-	 <xsl:param name="unique-id-map" />
+	<xsl:param name="type" />
+	<xsl:param name="presence" />
+	<xsl:param name="field_name" />
+	<xsl:param name="unique-id-map" />
+	<xsl:variable name="typename">
+		<xsl:choose>
+			<!-- Direct Types -->
+			<xsl:when test="$type='Color'">Color</xsl:when>
+			<xsl:when test="$type='Date'">Date</xsl:when>
+			<xsl:when test="$type='Email'">Email</xsl:when>
+			<xsl:when test="$type='Latitude'">Latitude</xsl:when>
+			<xsl:when test="$type='Longitude'">Longitude</xsl:when>
+			<xsl:when test="$type='Time'">Time</xsl:when>
+			<xsl:when test="$type='Text'">Text</xsl:when>
+			<xsl:when test="$type='Timezone'">Timezone</xsl:when>
 
-	 <xsl:choose>
-		<!-- Direct Types -->
-		<xsl:when test="$type='Color'">Color</xsl:when>
-		<xsl:when test="$type='Date'">Date</xsl:when>
-		<xsl:when test="$type='Email'">Email</xsl:when>
-		<xsl:when test="$type='Latitude'">Latitude</xsl:when>
-		<xsl:when test="$type='Longitude'">Longitude</xsl:when>
-		<xsl:when test="$type='Time'">Time</xsl:when>
-		<xsl:when test="$type='Text'">Text</xsl:when>
-		<xsl:when test="$type='Timezone'">Timezone</xsl:when>
+			<!-- ID's -->
+			<xsl:when test="$type='Unique ID'">{rs:normalize-id-type(replace($field_name, "_id$", "_uid"))}</xsl:when>
+			<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
+			<!-- TODO --> <!-- <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
+			<xsl:when test="$field_name=''"></xsl:when>
+			<xsl:when test="rs:is-foreign-id($type)">
+				<xsl:variable name="split-keys" select="rs:get-split-foreign-keys($type)/type"/>
+				<xsl:choose>
+					<!--
+						We're taking a shortcut with the `[1]` because
+						right now all foreign keys reference the same key and not any pairs
+						[revisit!]
+					-->
+					<xsl:when test="$unique-id-map/field[name=$split-keys[1] and type/name='Unique ID']">
+						<xsl:value-of select="rs:normalize-id-type(replace($split-keys[1], '_id$', '_uid'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="rs:normalize-id-type($split-keys[1])"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
 
-		<!-- ID's -->
-		<xsl:when test="$type='Unique ID'">{rs:normalize-id-type(replace($field_name, "_id$", "_uid"))}</xsl:when>
-		<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
-		<!-- TODO --> <!-- <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
-		<xsl:when test="$field_name=''"></xsl:when>
-		<xsl:when test="rs:is-foreign-id($type)">
-			<xsl:variable name="split-keys" select="rs:get-split-foreign-keys($type)/type"/>
-			<xsl:choose>
-				<!--
-					We're taking a shortcut with the `[1]` because
-					right now all foreign keys reference the same key and not any pairs
-					[revisit!]
-				-->
-				<xsl:when test="$unique-id-map/field[name=$split-keys[1] and type/name='Unique ID']">
-					<xsl:value-of select="rs:normalize-id-type(replace($split-keys[1], '_id$', '_uid'))"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="rs:normalize-id-type($split-keys[1])"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
+			<!-- Integer and Float Types -->
+			<xsl:when test="$type='Float'">Float</xsl:when>
+			<xsl:when test="$type='Integer'">Integer</xsl:when>
+			<xsl:when test="$type='Non-zero integer'">NonZeroInteger</xsl:when>
+			<xsl:when test="$type='Non-negative integer'">NonNegativeInteger</xsl:when>
+			<xsl:when test="$type='Non-null integer'">NonNullInteger</xsl:when>
+			<xsl:when test="$type='Positive integer'">PositiveInteger</xsl:when>
+			<xsl:when test="$type='Non-negative float'">NonNegativeFloat</xsl:when>
+			<xsl:when test="$type='Positive float'">PositiveFloat</xsl:when>
 
-		<!-- Integer and Float Types -->
-		<xsl:when test="$type='Float'">Float</xsl:when>
-		<xsl:when test="$type='Integer'">Integer</xsl:when>
-		<xsl:when test="$type='Non-zero integer'">NonZeroInteger</xsl:when>
-		<xsl:when test="$type='Non-negative integer'">NonNegativeInteger</xsl:when>
-		<xsl:when test="$type='Non-null integer'">NonNullInteger</xsl:when>
-		<xsl:when test="$type='Positive integer'">PositiveInteger</xsl:when>
-		<xsl:when test="$type='Non-negative float'">NonNegativeFloat</xsl:when>
-		<xsl:when test="$type='Positive float'">PositiveFloat</xsl:when>
+			<!-- Mapped Types -->
+			<xsl:when test="$type='URL'">Url</xsl:when>
+			<xsl:when test="$type='Language code'">LanguageCode</xsl:when>
+			<xsl:when test="$type='Phone number'">PhoneNumber</xsl:when>
+			<xsl:when test="$type='Currency code'">CurrencyCode</xsl:when>
+			<xsl:when test="$type='Currency amount'">CurrencyAmount</xsl:when>
 
-		<!-- Mapped Types -->
-		<xsl:when test="$type='URL'">Url</xsl:when>
-		<xsl:when test="$type='Language code'">LanguageCode</xsl:when>
-		<xsl:when test="$type='Phone number'">PhoneNumber</xsl:when>
-		<xsl:when test="$type='Currency code'">CurrencyCode</xsl:when>
-		<xsl:when test="$type='Currency amount'">CurrencyAmount</xsl:when>
+			<!-- Enums -->
+			<xsl:when test="$type='Enum'">GtfsEnum</xsl:when>
+			<xsl:when test="$type='Text or URL or Email or Phone number'">TranslationValue</xsl:when>
+			<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_id')">RecordId</xsl:when>
+			<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_sub_id')">RecordSubId</xsl:when>
+			<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID")</xsl:when> -->
+			<!-- TODO <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!"); {$type}</xsl:when> -->
 
-		<!-- Enums -->
-		<xsl:when test="$type='Enum'">GtfsEnum</xsl:when>
-		<xsl:when test="$type='Text or URL or Email or Phone number'">TranslationValue</xsl:when>
-		<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_id')">RecordId</xsl:when>
-		<!-- TODO --> <xsl:when test="$type='Foreign ID' and ($field_name='record_sub_id')">RecordSubId</xsl:when>
-		<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID")</xsl:when> -->
-		<!-- TODO <xsl:when test="count(tokenize($type, ' or ')) > 1">todo!("enum!"); {$type}</xsl:when> -->
+			<!-- Default Fallback Error (Todo's) -->
+			<xsl:otherwise><xsl:message terminate="yes">[rs:gtfs-type] Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:choose>
+		<!-- <xsl:when test="$presence='Required' or $presence=''"><xsl:value-of select="$typename"/></xsl:when>
+		<xsl:otherwise>Option&lt;{$typename}&gt;</xsl:otherwise> -->
+		<xsl:when test="
+			$presence='Optional' or
+			$presence='Conditionally Required' or
+			$presence='Conditionally Forbidden' or
+			$presence='Recommended'
+		">Option&lt;{$typename}&gt;</xsl:when>
+		<xsl:otherwise><xsl:value-of select="$typename"/></xsl:otherwise>
+	</xsl:choose>
 
-		<!-- Default Fallback Error (Todo's) -->
-		<xsl:otherwise><xsl:message terminate="yes">[rs:gtfs-type] Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
-	 </xsl:choose>
 </xsl:function>
 
 <xsl:function name="rs:map-gtfs-type-to-rust">
@@ -155,17 +168,17 @@
 		<xsl:when test="$typeName='Color'">String</xsl:when>
 
 		<xsl:when test="$typeName='CurrencyCode'">String /*ISO 4217*/</xsl:when>
-		<xsl:when test="$typeName='CurrencyAmount'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='CurrencyAmount'">/* todo!("Missing Type Map!") */ Text</xsl:when>
 
-		<xsl:when test="$typeName='Time'">/* todo!("Missing Type Map!") */ ()</xsl:when>
-		<xsl:when test="$typeName='Date'">/* todo!("Missing Type Map!") */ ()</xsl:when>
-		<xsl:when test="$typeName='Timezone'">/* todo!("Missing Type Map!") */ ()</xsl:when>
-		<xsl:when test="$typeName='Email'">/* todo!("Missing Type Map!") */ ()</xsl:when>
-		<xsl:when test="$typeName='PhoneNumber'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='Time'">/* todo!("Missing Type Map!") */ Text</xsl:when>
+		<xsl:when test="$typeName='Date'">/* todo!("Missing Type Map!") */ Text</xsl:when>
+		<xsl:when test="$typeName='Timezone'">/* todo!("Missing Type Map!") */ Text</xsl:when>
+		<xsl:when test="$typeName='Email'">/* todo!("Missing Type Map!") */ Text</xsl:when>
+		<xsl:when test="$typeName='PhoneNumber'">/* todo!("Missing Type Map!") */ Text</xsl:when>
 
 		<xsl:when test="$typeName='GtfsId'">String</xsl:when>
 
-		<xsl:when test="$typeName='Url'">/* todo!("Missing Type Map!") */ ()</xsl:when>
+		<xsl:when test="$typeName='Url'">/* todo!("Missing Type Map!") */ Text</xsl:when>
 		<!-- <xsl:when test="$typeName='Url'">url::Url</xsl:when> -->
 
 
