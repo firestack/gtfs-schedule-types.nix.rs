@@ -11,8 +11,17 @@
 <xsl:output method="xml" indent="true" />
 <xsl:strip-space elements="*"/>
 
+<xsl:variable name="dataset-files-table" select="(//*[@id='dataset-files']/following::x:table)[1]"/>
+
+<xsl:key name="fileDescriptions" match="$dataset-files-table/x:tbody/x:tr">
+	<xsl:value-of select="x:td[1]"/>
+</xsl:key>
+
 <!-- Root Template -->
 <xsl:template match="/" mode="#default" saxon:explain="yes" >
+	<!-- <search>
+		<xsl:copy-of select=""/>
+	</search> -->
 	<gtfs-static>
 		<xsl:apply-templates select="//x:main//x:article"></xsl:apply-templates>
 	</gtfs-static>
@@ -52,24 +61,28 @@
 </xsl:template>
 
 <xsl:template match="x:h3" mode="file">
+	<xsl:variable name="filename" select="./text()/normalize-space()"/>
 	<file
-		id="{./text()/normalize-space()}"
+		id="{$filename}"
 		presence="{./following-sibling::x:p[1]/x:strong/text()}"
 	>
-		<name>{./text()/normalize-space()}</name>
+		<name>{$filename}</name>
 		<presence>{./following-sibling::x:p[1]/x:strong/text()}</presence>
 		<primary-key>
 			<xsl:for-each select="./following-sibling::x:p[2]/x:code">
 				<key>{./text()}</key>
 			</xsl:for-each>
 		</primary-key>
-		<!-- <description><x:body>{//x:tr[./x:a[href=@id]]}</x:body></description> -->
+		<description><x:body>
+			<xsl:copy-of select="key('fileDescriptions', $filename)/x:td[3]"/>
+		</x:body></description>
 		<!-- <description><x:body>{./following-sibling::*[contains(., "Primary key")]/following-sibling::*[1]}</x:body></description> -->
 		<fields>
 			<xsl:apply-templates select="(./following::x:table)[1]/x:tbody/x:tr" mode="file-field" />
 		</fields>
 	</file>
 </xsl:template>
+
 
 <xsl:template match="x:tr" mode="file-field">
 	<field>

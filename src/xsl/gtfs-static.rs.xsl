@@ -50,6 +50,9 @@ pub struct GtfsStatic {{
 	/** &bt;{name}&bt;
 	 *
 	 * {presence}
+	 *
+	 * ## Description
+	 * {description}
 	 */
 	pub {substring-before(name, '.txt')}: {rs:wrap-type-with-presence(presence, concat("Vec&lt;", rs:struct-name-from-filename(name), "&gt;"))},
 </xsl:for-each>
@@ -165,6 +168,9 @@ use crate::types::*;
 
 <xsl:template mode="struct" match="file">
 /** {name}
+ *
+ * ## Description
+ * {description}
  */
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
 pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
