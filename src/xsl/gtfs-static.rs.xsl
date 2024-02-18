@@ -17,6 +17,7 @@
 <xsl:include href="./functions.xsl" />
 <xsl:output method="adaptive" />
 <xsl:strip-space elements="*"/>
+<xsl:variable name="xml-serialize-opts" select="map { 'method': 'html', 'indent': true() }"></xsl:variable>
 
 <xsl:variable name="unique-field-id-map">
 	<xsl:copy-of select="//fields/field[type/name='Unique ID' or type/name='ID']"/>
@@ -48,11 +49,11 @@ use crate::files::*;
 pub struct GtfsStatic {{
 <xsl:for-each select="//file">
 	/** &bt;{name}&bt;
-	 *
-	 * {presence}
-	 *
-	 * ## Description
-	 * {description}
+
+	{presence}
+
+	## Description
+	{description}
 	 */
 	pub {substring-before(name, '.txt')}: {rs:wrap-type-with-presence(presence, concat("Vec&lt;", rs:struct-name-from-filename(name), "&gt;"))},
 </xsl:for-each>
@@ -130,7 +131,8 @@ pub struct GtfsStatic {{
 
 <xsl:template mode="type-definition" match=".">
 <xsl:variable name="typeName"><xsl:apply-templates select="." mode="type" /></xsl:variable>
-/** <xsl:copy-of select="description/x:body"/>
+/**
+<xsl:copy-of select="description/x:body"/>
  */
 pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-type-to-rust($typeName)"/>;
 </xsl:template>
@@ -168,9 +170,12 @@ use crate::types::*;
 
 <xsl:template mode="struct" match="file">
 /** {name}
- *
- * ## Description
- * {description}
+
+{serialize(description/summary/node(), $xml-serialize-opts)}
+
+## Description
+{serialize(description/x:body/node(), $xml-serialize-opts)}
+<!-- <xsl:copy-of select="serialize(description/x:body/*, <xsl:output method='html' indent='yes' />)"/> -->
  */
 #[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
 pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
@@ -180,7 +185,7 @@ pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
 </xsl:template>
 
 <xsl:template mode="struct" match="field" >
-	/** {description}
+	/** {serialize(description/x:body/node(), $xml-serialize-opts)}
 	 <!-- * {presence} -->
 	 */
 	pub {name}: {rs:gtfs-type(type, presence, name, $unique-field-id-map)},

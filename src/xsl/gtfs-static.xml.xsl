@@ -85,19 +85,20 @@
 				<key>{./text()}</key>
 			</xsl:for-each>
 		</primary-key>
-		<description><x:body>
-			<xsl:copy-of select="key('fileDescriptions', $filename)/x:td[3]"/>
-
-			<xsl:variable name="reference-header" select="."/>
-			<xsl:variable name="following-table" select="($reference-header/following-sibling::x:table)[1]"/>
-			<xsl:copy-of select="
-				$following-table/preceding-sibling::*[
-					count(
-						preceding-sibling::*[generate-id()=generate-id($reference-header)]
-					) = 1
-				]
-			"/>
-		</x:body></description>
+		<description>
+			<summary><xsl:copy-of select="key('fileDescriptions', $filename)/x:td[3]/node()"/></summary>
+			<x:body>
+				<xsl:variable name="reference-header" select="."/>
+				<xsl:variable name="following-table" select="($reference-header/(following-sibling::x:table | following-sibling::*//x:table))[1]"/>
+				<xsl:copy-of select="
+					$following-table/preceding-sibling::*[
+						count(
+							preceding-sibling::*[generate-id()=generate-id($reference-header)]
+						) = 1
+					]
+				"/>
+			</x:body>
+		</description>
 		<!-- <description><x:body>{./following-sibling::*[contains(., "Primary key")]/following-sibling::*[1]}</x:body></description> -->
 		<fields>
 			<xsl:apply-templates select="(./following::x:table)[1]/x:tbody/x:tr" mode="file-field" />
