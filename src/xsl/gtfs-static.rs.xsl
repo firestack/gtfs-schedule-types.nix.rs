@@ -172,7 +172,7 @@ use crate::types::*;
 </xsl:template>
 
 <xsl:template mode="struct" match="file">
-/** {name}
+/** &bt;{name}&bt;
 
 {serialize(description/summary/node(), $xml-serialize-opts)}
 

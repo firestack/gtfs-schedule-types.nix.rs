@@ -26,13 +26,50 @@
 			perSystem = { pkgs, lib, self', system, ... }: let
 				craneLib = crane.lib.${system};
 
-				my-crate = craneLib.buildPackage {
-					src = craneLib.cleancargosource (craneLib.path ./.);
-					strictdeps = true;
+				# src = craneLib.cleanCargoSource (craneLib.path ./gtfs-static-types);
+				src = let
+					# Only keeps markdown files
+					graphQLFilter = path: _type: builtins.match ".*/src/.*\.gql$" path != null;
+					testData = path: _type: builtins.match ".*/test_data/.*$" path != null;
+					qglOrCargo = path: type:
+						builtins.any (fn: fn path type) [
+							graphQLFilter
+							testData
+							craneLib.filterCargoSources
+						];
+					cleanedSource = lib.cleanSourceWith {
+						src = craneLib.path ./gtfs-static-types; # The original, unfiltered source
+						filter = qglOrCargo;
+					};
+				# in cleanedSource;
+				in pkgs.stdenvNoCC.mkDerivation {
+					pname = "gtfs-static-types";
+					version = "0.0.1";
+
+					src = cleanedSource.outPath;
+					buildPhase = lib.concatLines [
+						"set -x"
+						"cp ${self'.packages.gtfs-static-rs}/*.rs ./src/"
+						"set +x"
+					];
+					doCheck = false;
+					installPhase = (lib.concatLines [
+						"set -x"
+						"ls -la"
+						"mkdir -p $out"
+						"cp -a . $out"
+						"set +x"
+					]);
+				};
+
+				commonArgs = {
+					inherit src;
+					strictDeps = true;
+					doCheck = false;
 
 					buildInputs = [
 						# Add additional build inputs here
-					] ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+					] ++ lib.optionals pkgs.stdenv.isDarwin [
 						# Additional darwin specific inputs can be set here
 						pkgs.libiconv
 					];
@@ -40,7 +77,14 @@
 					# Additional environment variables can be set directly
 					# MY_CUSTOM_VAR = "some value";
 				};
-				linesFrom = lib.concatStringsSep "\n";
+
+				cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+				my-crate = craneLib.buildPackage commonArgs // {
+					inherit cargoArtifacts;
+				};
+
+				linesFrom = lib.concatLines;
 			in {
 				packages.mbta-gtfs = pkgs.fetchzip {
 					name = "MBTA GTFS Static";
@@ -70,20 +114,6 @@
 						"-o:$out"
 				]);
 
-				# packages.gtfs-static-rs = pkgs.runCommand "gtfs-static-rs" {
-				# 	buildInputs = [ pkgs.saxon-he ];
-				# 	src = ./src/xsl;
-				# } (linesFrom [
-				# 	"ls -la"
-				# 	"mkdir $out"
-				# 	"saxon-he -t \\"
-				# 		"-s:${self'.packages.gtfs-static-xml} \\"
-				# 		"-xsl:${./src/xsl/gtfs-static.rs.xsl}"
-				# 	"cp ./gtfs-static/* $out/"
-				# 	"ln -s ${self'.packages.gtfs-static-xml} $out/gtfs-static.xml"
-				# ]);
-
-
 				packages.gtfs-static-rs = pkgs.stdenvNoCC.mkDerivation {
 					pname = "gtfs-static-rs";
 					version = "0.0.2";
@@ -107,6 +137,8 @@
 					];
 
 				};
+
+				packages.gtfs-static-types = my-crate;
 
 				legacyPackages = { inherit craneLib; };
 
