@@ -19,17 +19,21 @@
 
 <!-- Root Template -->
 <xsl:template match="/" mode="#default" saxon:explain="yes" >
-	<search>
-		<xsl:variable name="reference-header" select="//*[@id='calendar_datestxt']"/>
-		<xsl:variable name="following-table" select="($reference-header/following-sibling::x:table)[1]"/>
+	<!-- <search> -->
+		<!-- <xsl:variable name="reference-header" select="//*[@id='calendar_datestxt']"/>
+		<xsl:variable name="following-table" select="($reference-header/following-sibling::x:table)[1]"/> -->
 		<!-- <xsl:copy-of select="$reference-header/following-sibling::*[
 			position() &lt; $following-table
 		]"/> -->
 		<!-- <xsl:copy-of select="//*[preceding-sibling::*[x:table or //x:table][1][generate-id() = generate-id()($reference-header)]]"/> -->
-		<xsl:copy-of select="$following-table/preceding-sibling::*[count(
-			preceding-sibling::*[@id='calendar_datestxt']
-		) = 1]"/>
-	</search>
+		<!-- <xsl:copy-of select="
+			$following-table/preceding-sibling::*[
+				count(
+					preceding-sibling::*[generate-id()=generate-id($reference-header)]
+				) = 1
+			]
+		"/> -->
+	<!-- </search> -->
 	<gtfs-static>
 		<xsl:apply-templates select="//x:main//x:article"></xsl:apply-templates>
 	</gtfs-static>
@@ -83,6 +87,16 @@
 		</primary-key>
 		<description><x:body>
 			<xsl:copy-of select="key('fileDescriptions', $filename)/x:td[3]"/>
+
+			<xsl:variable name="reference-header" select="."/>
+			<xsl:variable name="following-table" select="($reference-header/following-sibling::x:table)[1]"/>
+			<xsl:copy-of select="
+				$following-table/preceding-sibling::*[
+					count(
+						preceding-sibling::*[generate-id()=generate-id($reference-header)]
+					) = 1
+				]
+			"/>
 		</x:body></description>
 		<!-- <description><x:body>{./following-sibling::*[contains(., "Primary key")]/following-sibling::*[1]}</x:body></description> -->
 		<fields>
