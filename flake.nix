@@ -86,6 +86,8 @@
 
 				linesFrom = lib.concatLines;
 			in {
+				packages.default = self'.packages.gtfs-static-types-doc;
+
 				packages.gtfs-static-types = gtfs-static-types;
 
 				packages.gtfs-static-types-doc = craneLib.cargoDoc (commonArgs // {
