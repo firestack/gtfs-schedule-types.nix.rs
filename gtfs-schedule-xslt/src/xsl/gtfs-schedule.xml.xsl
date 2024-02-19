@@ -56,11 +56,11 @@
 
 <!-- records -->
 <xsl:template match='*[@id="field-definitions"]' saxon:explain="yes">
-	<definitions>
+	<records>
 		<title>{./text()/normalize-space()}</title>
 
 		<xsl:apply-templates mode="record" select="./following-sibling::x:h3" />
-	</definitions>
+	</records>
 </xsl:template>
 
 <xsl:template match="x:h3" mode="record">

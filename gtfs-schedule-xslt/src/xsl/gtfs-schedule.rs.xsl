@@ -35,7 +35,7 @@
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
 	<xsl:result-document href="gtfs-schedule/records.rs" method="text">
-		<xsl:call-template name="definitions"/>
+		<xsl:call-template name="records"/>
 	</xsl:result-document>
 </xsl:template>
 
@@ -51,7 +51,7 @@ use crate::records::*;
  */
 #[derive(Debug)]
 pub struct GtfsSchedule {{
-<xsl:for-each select="//definitions/record">
+<xsl:for-each select="//records/record">
 /** __File Name:__ &bt;{name}&bt;
 
 __Presence:__ {presence}
@@ -164,11 +164,11 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-
 
 <!-- #region Structs -->
 <!-- Call by `@name` because we want access to the whole document -->
-<xsl:template name="definitions">
+<xsl:template name="records">
 use crate::types::*;
 
 /* Structs */
-<xsl:apply-templates mode="struct" select="//definitions/record" />
+<xsl:apply-templates mode="struct" select="//records/record" />
 </xsl:template>
 
 <xsl:template mode="struct" match="record">
