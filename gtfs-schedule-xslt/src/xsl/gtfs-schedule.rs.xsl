@@ -188,8 +188,9 @@ pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
 </xsl:template>
 
 <xsl:template mode="struct" match="field" >
-	/** {serialize(description/x:body/node(), $xml-serialize-opts)}
-	 <!-- * {presence} -->
+	/** Record: __{presence}__
+
+{serialize(description/x:body/node(), $xml-serialize-opts)}
 	 */
 	pub {name}: {rs:gtfs-type(type, presence, name, $unique-field-id-map)},
 </xsl:template>
