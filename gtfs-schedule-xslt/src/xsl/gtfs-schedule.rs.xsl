@@ -47,11 +47,11 @@ use crate::records::*;
 /* Types */
 
 /**
- * Container referencing all files contained in a GTFS Schedule dataset
+ * Container referencing all records contained in a GTFS Schedule dataset
  */
 #[derive(Debug)]
 pub struct GtfsSchedule {{
-<xsl:for-each select="//file">
+<xsl:for-each select="//definitions/record">
 /** __File Name:__ &bt;{name}&bt;
 
 __Presence:__ {presence}
@@ -168,10 +168,10 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-
 use crate::types::*;
 
 /* Structs */
-<xsl:apply-templates mode="struct" select="//definitions/file" />
+<xsl:apply-templates mode="struct" select="//definitions/record" />
 </xsl:template>
 
-<xsl:template mode="struct" match="file">
+<xsl:template mode="struct" match="record">
 /** &bt;{name}&bt;
 
 {serialize(description/summary/node(), $xml-serialize-opts)}
