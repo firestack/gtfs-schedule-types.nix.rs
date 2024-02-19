@@ -104,7 +104,7 @@
 				packages.gtfs-static-html = pkgs.fetchurl {
 					name = "gtfs-static.html";
 					url = "https://gtfs.org/schedule/reference";
-					hash = "sha256-RHcc3G2lksdgGIlJuethbhoDST+TeHXjcBNGMbiawCQ=";
+					hash = "sha256-r5qin6byMXoC5KQk8sfSg/knQkFjmC8KaoUS1uTb3mo=";
 				};
 
 				packages.gtfs-static-xhtml = pkgs.runCommand "gtfs-static.xhtml" {
