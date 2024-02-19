@@ -161,6 +161,15 @@
 						command = ''fd . src/ | entr -rc saxon-he -t $@'';
 					}];
 				};
+
+				checks = {
+					inherit (self'.packages)
+						gtfs-static-types
+						gtfs-static-types-doc;
+
+					inherit (self'.devShells)
+						default;
+				};
 			};
 		};
 }
