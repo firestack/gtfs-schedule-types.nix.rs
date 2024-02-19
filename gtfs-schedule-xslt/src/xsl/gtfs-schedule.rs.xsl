@@ -34,7 +34,7 @@
 	<xsl:result-document href="gtfs-schedule/types.rs" method="text">
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
-	<xsl:result-document href="gtfs-schedule/files.rs" method="text">
+	<xsl:result-document href="gtfs-schedule/records.rs" method="text">
 		<xsl:call-template name="definitions"/>
 	</xsl:result-document>
 </xsl:template>
@@ -42,7 +42,7 @@
 <!-- #endregion Types -->
 <!-- Call by `@name` because we want access to the whole document -->
 <xsl:template name="types">
-use crate::files::*;
+use crate::records::*;
 
 /* Types */
 
