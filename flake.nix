@@ -1,6 +1,7 @@
 {
 	description = "GTFS Types from GTFS Spec";
 
+	inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 	inputs.devshell.url = "github:numtide/devshell";
 	inputs.flake-parts.url = "github:hercules-ci/flake-parts";
 
@@ -113,14 +114,42 @@
 					"tidy -asxhtml --new-inline-tags c -o $out ${self'.packages.gtfs-static-html} || true"
 				]);
 
-				packages.gtfs-static-xml = pkgs.runCommand "gtfs-static.xml" {
+				# packages.gtfs-static-xml = pkgs.runCommand "gtfs-static.xml" {
+				# 	buildInputs = [ pkgs.saxon-he ];
+				# } (linesFrom [
+				# 	"saxon-he -t \\"
+				# 		"-s:${self'.packages.gtfs-static-xhtml} \\"
+				# 		"-xsl:${./src/xsl/gtfs-static.xml.xsl} \\"
+				# 		"-o:$out"
+				# ]);
+
+				packages.gtfs-static-xml = pkgs.stdenvNoCC.mkDerivation {
+					pname = "gtfs-static.xml";
+					version = "0.0.1";
+
+					src = lib.cleanSourceWith {
+						filter = (path: _: builtins.match ".*(txt-fns|functions|gtfs-static.xml)\.xsl" path != null);
+						src = ./src/xsl;
+					};
+
 					buildInputs = [ pkgs.saxon-he ];
-				} (linesFrom [
-					"saxon-he -t \\"
-						"-s:${self'.packages.gtfs-static-xhtml} \\"
-						"-xsl:${./src/xsl/gtfs-static.xml.xsl} \\"
-						"-o:$out"
-				]);
+
+					buildPhase = lib.concatLines [
+						"ls -la"
+						# "mkdir $out"
+
+						"saxon-he -t \\"
+							"-s:${self'.packages.gtfs-static-xhtml} \\"
+							"-xsl:gtfs-static.xml.xsl \\"
+							"-o:$out"
+					];
+
+					dontInstall = true;
+					# installPhase = linesFrom [
+					# 	"cp ./ $out/"
+					# ];
+
+				};
 
 				packages.gtfs-static-rs = pkgs.stdenvNoCC.mkDerivation {
 					pname = "gtfs-static-rs";

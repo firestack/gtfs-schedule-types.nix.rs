@@ -3,11 +3,13 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:saxon="http://saxon.sf.net/"
 	xmlns:x="http://www.w3.org/1999/xhtml"
+	xmlns:rs="https://www.rust-lang.org.kaylafire.me/"
 
 	exclude-result-prefixes="#all"
 	expand-text="yes"
 	version="3.0"
 >
+<xsl:include href="./functions.xsl" />
 <xsl:output method="xml" indent="true" />
 <xsl:strip-space elements="*"/>
 
@@ -110,7 +112,9 @@
 <xsl:template match="x:tr" mode="file-field">
 	<field>
 		<name>{x:td[1]/node()}</name>
-		<type><name>{x:td[2]/node()}</name></type>
+		<type><name>{x:td[2]/node()}</name><debug>
+			<!-- <xsl:copy-of select="" /> -->
+		</debug></type>
 		<presence>{x:td[3]/node()}</presence>
 		<description><x:body><xsl:copy-of select="x:td[4]/node()"/></x:body></description>
 	</field>
