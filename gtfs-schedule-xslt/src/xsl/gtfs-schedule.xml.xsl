@@ -15,45 +15,32 @@
 
 <xsl:variable name="dataset-files-table" select="(//*[@id='dataset-files']/following::x:table)[1]"/>
 
-<xsl:key name="fileDescriptions" match="$dataset-files-table/x:tbody/x:tr">
+<xsl:key name="recordDescriptions" match="$dataset-files-table/x:tbody/x:tr">
 	<xsl:value-of select="x:td[1]"/>
 </xsl:key>
 
 <!-- Root Template -->
 <xsl:template match="/" mode="#default" saxon:explain="yes" >
-	<!-- <search> -->
-		<!-- <xsl:variable name="reference-header" select="//*[@id='calendar_datestxt']"/>
-		<xsl:variable name="following-table" select="($reference-header/following-sibling::x:table)[1]"/> -->
-		<!-- <xsl:copy-of select="$reference-header/following-sibling::*[
-			position() &lt; $following-table
-		]"/> -->
-		<!-- <xsl:copy-of select="//*[preceding-sibling::*[x:table or //x:table][1][generate-id() = generate-id()($reference-header)]]"/> -->
-		<!-- <xsl:copy-of select="
-			$following-table/preceding-sibling::*[
-				count(
-					preceding-sibling::*[generate-id()=generate-id($reference-header)]
-				) = 1
-			]
-		"/> -->
-	<!-- </search> -->
 	<gtfs-schedule>
-		<xsl:apply-templates select="//x:main//x:article"></xsl:apply-templates>
+		<xsl:apply-templates select="//x:main//x:article" />
 	</gtfs-schedule>
 </xsl:template>
 
 <xsl:template match="//x:main//x:article" saxon:explain="yes" >
-	<types><xsl:apply-templates select='*[@id="field-types"]'/></types>
-	<definitions><xsl:apply-templates select='*[@id="field-definitions"]'/></definitions>
+	<xsl:apply-templates select='*[@id="field-types"]'/>
+	<xsl:apply-templates select='*[@id="field-definitions"]'/>
 </xsl:template>
 
 <!-- Types -->
 <xsl:template match='*[@id="field-types"]' saxon:explain="yes">
-	<title>{./text()/normalize-space()}</title>
+	<types>
+		<title>{./text()/normalize-space()}</title>
 
-	<xsl:apply-templates
-		select="(./following::x:ul)[1]/x:li"
-		mode="field-type"
-	/>
+		<xsl:apply-templates
+			select="(./following::x:ul)[1]/x:li"
+			mode="field-type"
+		/>
+	</types>
 </xsl:template>
 
 <xsl:template match="x:*" mode="field-type">
@@ -67,20 +54,22 @@
 	</type>
 </xsl:template>
 
-<!-- files -->
+<!-- records -->
 <xsl:template match='*[@id="field-definitions"]' saxon:explain="yes">
-	<title>{./text()/normalize-space()}</title>
+	<records>
+		<title>{./text()/normalize-space()}</title>
 
-	<xsl:apply-templates mode="file" select="./following-sibling::x:h3" />
+		<xsl:apply-templates mode="record" select="./following-sibling::x:h3" />
+	</records>
 </xsl:template>
 
-<xsl:template match="x:h3" mode="file">
-	<xsl:variable name="filename" select="./text()/normalize-space()"/>
-	<file
-		id="{$filename}"
+<xsl:template match="x:h3" mode="record">
+	<xsl:variable name="record-name" select="./text()/normalize-space()"/>
+	<record
+		id="{$record-name}"
 		presence="{./following-sibling::x:p[1]/x:strong/text()}"
 	>
-		<name>{$filename}</name>
+		<name>{$record-name}</name>
 		<presence>{./following-sibling::x:p[1]/x:strong/text()}</presence>
 		<primary-key>
 			<xsl:for-each select="./following-sibling::x:p[2]/x:code">
@@ -88,7 +77,7 @@
 			</xsl:for-each>
 		</primary-key>
 		<description>
-			<summary><xsl:copy-of select="key('fileDescriptions', $filename)/x:td[3]/node()"/></summary>
+			<summary><xsl:copy-of select="key('recordDescriptions', $record-name)/x:td[3]/node()"/></summary>
 			<x:body>
 				<xsl:variable name="reference-header" select="."/>
 				<xsl:variable name="following-table" select="($reference-header/(following-sibling::x:table | following-sibling::*//x:table))[1]"/>
@@ -103,13 +92,13 @@
 		</description>
 		<!-- <description><x:body>{./following-sibling::*[contains(., "Primary key")]/following-sibling::*[1]}</x:body></description> -->
 		<fields>
-			<xsl:apply-templates select="(./following::x:table)[1]/x:tbody/x:tr" mode="file-field" />
+			<xsl:apply-templates select="(./following::x:table)[1]/x:tbody/x:tr" mode="record-field" />
 		</fields>
-	</file>
+	</record>
 </xsl:template>
 
 
-<xsl:template match="x:tr" mode="file-field">
+<xsl:template match="x:tr" mode="record-field">
 	<field>
 		<name>{x:td[1]/node()}</name>
 		<type><name>{x:td[2]/node()}</name><debug>

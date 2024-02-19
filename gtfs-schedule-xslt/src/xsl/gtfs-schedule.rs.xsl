@@ -34,24 +34,24 @@
 	<xsl:result-document href="gtfs-schedule/types.rs" method="text">
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
-	<xsl:result-document href="gtfs-schedule/files.rs" method="text">
-		<xsl:call-template name="definitions"/>
+	<xsl:result-document href="gtfs-schedule/records.rs" method="text">
+		<xsl:call-template name="records"/>
 	</xsl:result-document>
 </xsl:template>
 
 <!-- #endregion Types -->
 <!-- Call by `@name` because we want access to the whole document -->
 <xsl:template name="types">
-use crate::files::*;
+use crate::records::*;
 
 /* Types */
 
 /**
- * Container referencing all files contained in a GTFS Schedule dataset
+ * Container referencing all records contained in a GTFS Schedule dataset
  */
 #[derive(Debug)]
 pub struct GtfsSchedule {{
-<xsl:for-each select="//file">
+<xsl:for-each select="//records/record">
 /** __File Name:__ &bt;{name}&bt;
 
 __Presence:__ {presence}
@@ -164,14 +164,14 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-
 
 <!-- #region Structs -->
 <!-- Call by `@name` because we want access to the whole document -->
-<xsl:template name="definitions">
+<xsl:template name="records">
 use crate::types::*;
 
 /* Structs */
-<xsl:apply-templates mode="struct" select="//definitions/file" />
+<xsl:apply-templates mode="struct" select="//records/record" />
 </xsl:template>
 
-<xsl:template mode="struct" match="file">
+<xsl:template mode="struct" match="record">
 /** &bt;{name}&bt;
 
 {serialize(description/summary/node(), $xml-serialize-opts)}
@@ -188,8 +188,9 @@ pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
 </xsl:template>
 
 <xsl:template mode="struct" match="field" >
-	/** {serialize(description/x:body/node(), $xml-serialize-opts)}
-	 <!-- * {presence} -->
+	/** Record: __{presence}__
+
+{serialize(description/x:body/node(), $xml-serialize-opts)}
 	 */
 	pub {name}: {rs:gtfs-type(type, presence, name, $unique-field-id-map)},
 </xsl:template>

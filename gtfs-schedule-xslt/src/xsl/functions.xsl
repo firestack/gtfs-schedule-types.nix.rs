@@ -28,10 +28,10 @@
 <xsl:function name="rs:split-foreign-key">
 	<xsl:param name="type-string"/>
 	<xsl:variable name="normal-type-string" select="normalize-space($type-string)"/>
-	<out>
-		<file>{substring-before($normal-type-string, ".")}</file>
-		<type>{substring-after($normal-type-string, ".")}</type>
-	</out>
+	<foreign-key>
+		<record>{substring-before($normal-type-string, ".")}</record>
+		<field>{substring-after($normal-type-string, ".")}</field>
+	</foreign-key>
 </xsl:function>
 
 
@@ -40,39 +40,6 @@
 
 	<xsl:for-each select="rs:get-foreign-keys($type-string)">
 		<xsl:copy-of select="rs:split-foreign-key(.)"/>
-	</xsl:for-each>
-</xsl:function>
-
-<!-- <xsl:function name="rs:get-foreign-key-type">
-	<xsl:param name="type-string"/>
-	<xsl:copy-of select="starts-with($type-string, $foreign-prefix)"/>
-</xsl:function> -->
-
-<!-- <xsl:function name="">
-{rs:normalize-id-type(replace($field_name, "_id$", "_uid"))}
-</xsl:function> -->
-
-<xsl:function name="rs:get-distinct-types">
-	<xsl:param name="nodes"/>
-	<xsl:variable name="distinct-types">
-		<xsl:for-each select="($nodes)"><xsl:sort select="."/>
-			<xsl:choose>
-					<xsl:when test="rs:is-foreign-id(.)">
-						<xsl:variable name="types">
-							<xsl:for-each select="rs:get-split-foreign-keys(.)">
-								<foreign-key>{rs:normalize-id-type(./type)}</foreign-key>
-							</xsl:for-each>
-						</xsl:variable>
-						<xsl:for-each select="$types/foreign-key"><type>{.}</type></xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise><type>{.}</type></xsl:otherwise>
-				</xsl:choose>
-
-		</xsl:for-each>
-	</xsl:variable>
-
-	<xsl:for-each select="distinct-values($distinct-types/type)">
-		<type>{.}</type>
 	</xsl:for-each>
 </xsl:function>
 
@@ -106,12 +73,11 @@
 				-->
 				<xsl:variable name="split-key" select="rs:get-split-foreign-keys($type)[1]"/>
 					<xsl:choose>
-
-						<xsl:when test="$unique-id-map/field[name=$split-key/type and type/name='Unique ID']">
-							<xsl:value-of select="rs:normalize-id-type(replace($split-key/type, '_id$', '_uid'))"/>
+						<xsl:when test="$unique-id-map/field[name=$split-key/field and type/name='Unique ID']">
+							<xsl:value-of select="rs:normalize-id-type(replace($split-key/field, '_id$', '_uid'))"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="rs:normalize-id-type($split-key/type)"/>
+							<xsl:value-of select="rs:normalize-id-type($split-key/field)"/>
 						</xsl:otherwise>
 					</xsl:choose>
 			</xsl:when>
@@ -254,15 +220,5 @@
 	<xsl:param name="id" />
 	<xsl:text>{txt:normalize-title-case(tokenize($id, "_"))}</xsl:text>
 </xsl:function>
-
-<!-- <xsl:key
-	name="typesDistinct"
-	match="//fields/field | //types/type"
->
-	<xsl:choose>
-		<xsl:when test="../id">{rs:gtfs-type(id, ../presence, ../id)}</xsl:when>
-		<xsl:otherwise>{rs:gtfs-type(id, "", id)}</xsl:otherwise>
-	</xsl:choose>
-</xsl:key> -->
 
 </xsl:stylesheet>

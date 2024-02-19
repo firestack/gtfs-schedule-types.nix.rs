@@ -1,7 +1,7 @@
-//! GTFS Static Types
+//! GTFS Schedule Types
 //!
 
-/// Data types derived from GTFS Static
+/// Data types derived from GTFS Schedule
 pub mod types;
-/// Struct definitions derived from the files and fields of GTFS Static
-pub mod files;
+/// Struct definitions derived from the Records and Fields of GTFS Schedule
+pub mod records;
