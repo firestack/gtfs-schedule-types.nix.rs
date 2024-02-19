@@ -80,12 +80,18 @@
 
 				cargoArtifacts = craneLib.buildDepsOnly commonArgs;
 
-				my-crate = craneLib.buildPackage commonArgs // {
+				gtfs-static-types = craneLib.buildPackage (commonArgs // {
 					inherit cargoArtifacts;
-				};
+				});
 
 				linesFrom = lib.concatLines;
 			in {
+				packages.gtfs-static-types = gtfs-static-types;
+
+				packages.gtfs-static-types-doc = craneLib.cargoDoc (commonArgs // {
+					inherit cargoArtifacts;
+				});
+
 				packages.mbta-gtfs = pkgs.fetchzip {
 					name = "MBTA GTFS Static";
 					url = "https://cdn.mbtace.com/archive/20240111.zip";
@@ -137,10 +143,6 @@
 					];
 
 				};
-
-				packages.gtfs-static-types = my-crate;
-
-				legacyPackages = { inherit craneLib; };
 
 				devshells.default = {
 					packages = [
