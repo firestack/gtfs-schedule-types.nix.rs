@@ -3,11 +3,13 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:saxon="http://saxon.sf.net/"
 	xmlns:x="http://www.w3.org/1999/xhtml"
+	xmlns:rs="https://www.rust-lang.org.kaylafire.me/"
 
 	exclude-result-prefixes="#all"
 	expand-text="yes"
 	version="3.0"
 >
+<xsl:include href="./functions.xsl" />
 <xsl:output method="xml" indent="true" />
 <xsl:strip-space elements="*"/>
 
