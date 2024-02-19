@@ -47,10 +47,10 @@ use crate::files::*;
 /* Types */
 
 /**
- * Container referencing all files contained in a GTFS Static directory
+ * Container referencing all files contained in a GTFS Schedule dataset
  */
 #[derive(Debug)]
-pub struct GtfsStatic {{
+pub struct GtfsSchedule {{
 <xsl:for-each select="//file">
 /** __File Name:__ &bt;{name}&bt;
 
