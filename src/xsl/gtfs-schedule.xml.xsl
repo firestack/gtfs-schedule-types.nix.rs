@@ -36,9 +36,9 @@
 			]
 		"/> -->
 	<!-- </search> -->
-	<gtfs-static>
+	<gtfs-schedule>
 		<xsl:apply-templates select="//x:main//x:article"></xsl:apply-templates>
-	</gtfs-static>
+	</gtfs-schedule>
 </xsl:template>
 
 <xsl:template match="//x:main//x:article" saxon:explain="yes" >

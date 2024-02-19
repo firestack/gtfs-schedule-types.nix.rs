@@ -23,18 +23,18 @@
 	<xsl:copy-of select="//fields/field[type/name='Unique ID' or type/name='ID']"/>
 </xsl:variable>
 <!-- Root Template -->
-<xsl:template match="/gtfs-static" mode="#default" saxon:explain="yes" >
+<xsl:template match="/gtfs-schedule" mode="#default" saxon:explain="yes" >
 
-	<xsl:result-document href="gtfs-static/search.xml" method="xml" indent="yes">
+	<xsl:result-document href="gtfs-schedule/search.xml" method="xml" indent="yes">
 		<xsl:for-each select="distinct-values(//field/presence)">
 			<xsl:copy-of select="."/>
 		</xsl:for-each>
 	</xsl:result-document>
 
-	<xsl:result-document href="gtfs-static/types.rs" method="text">
+	<xsl:result-document href="gtfs-schedule/types.rs" method="text">
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
-	<xsl:result-document href="gtfs-static/files.rs" method="text">
+	<xsl:result-document href="gtfs-schedule/files.rs" method="text">
 		<xsl:call-template name="definitions"/>
 	</xsl:result-document>
 </xsl:template>
@@ -47,10 +47,10 @@ use crate::files::*;
 /* Types */
 
 /**
- * Container referencing all files contained in a GTFS Static directory
+ * Container referencing all files contained in a GTFS Schedule dataset
  */
 #[derive(Debug)]
-pub struct GtfsStatic {{
+pub struct GtfsSchedule {{
 <xsl:for-each select="//file">
 /** __File Name:__ &bt;{name}&bt;
 
