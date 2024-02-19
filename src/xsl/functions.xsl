@@ -81,6 +81,7 @@
 	<xsl:param name="presence" />
 	<xsl:param name="field_name" />
 	<xsl:param name="unique-id-map" />
+
 	<xsl:variable name="typename">
 		<xsl:choose>
 			<!-- Direct Types -->
@@ -96,25 +97,33 @@
 			<!-- ID's -->
 			<xsl:when test="$type='Unique ID'">{rs:normalize-id-type(replace($field_name, "_id$", "_uid"))}</xsl:when>
 			<xsl:when test="$type='ID'">{rs:normalize-id-type($field_name)}</xsl:when>
-			<!-- TODO --> <!-- <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
-			<!-- <xsl:when test="$field_name=''"></xsl:when> -->
+
+			<xsl:when test="starts-with($type, 'Foreign ID referencing')">()</xsl:when>
+
 			<!-- <xsl:when test="rs:is-foreign-id($type)">
-				<xsl:variable name="split-keys" select="rs:get-split-foreign-keys($type)/type"/>
-				<xsl:choose> -->
-					<!--
+				<xsl:variable name="split-keys" select="(rs:get-split-foreign-keys($type)/type)[1]"/>
+				<xsl:choose>
+
+					<xsl:when test="$unique-id-map/field[name=$split-keys and type/name='Unique ID']">
+						<xsl:value-of select="rs:normalize-id-type(replace($split-keys, '_id$', '_uid'))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="rs:normalize-id-type($split-keys)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when> -->
+								<!--
 						We're taking a shortcut with the `[1]` because
 						right now all foreign keys reference the same key and not any pairs
 						[revisit!]
 					-->
-					<!-- <xsl:when test="$unique-id-map/field[name=$split-keys[1] and type/name='Unique ID']">
-						<xsl:value-of select="rs:normalize-id-type(replace($split-keys[1], '_id$', '_uid'))"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="rs:normalize-id-type($split-keys[1])"/>
-					</xsl:otherwise>
-				</xsl:choose>
+			<!-- <xsl:when test="rs:is-foreign-id($type)">
+				<xsl:variable name="split-keys" select="rs:get-split-foreign-keys($type)/type"/>
+				<xsl:value-of select="rs:normalize-id-type($split-keys[1])"/>
 			</xsl:when> -->
+
 			<!-- TODO <xsl:when test="$type='Foreign ID'">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
+			<!-- TODO --> <!-- <xsl:when test="starts-with($type, 'Foreign ID')">todo!("Foreign ID"); {rs:normalize-id-type(normalize-space(substring-after($type, "Foreign ID referencing")))}</xsl:when> -->
 
 			<!-- Integer and Float Types -->
 			<xsl:when test="$type='Float'">Float</xsl:when>
@@ -145,6 +154,7 @@
 			<xsl:otherwise><xsl:message terminate="yes">[rs:gtfs-type] Error: Undefined Type!({$type}): '{$field_name}': '{$type}'</xsl:message></xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+
 	<xsl:value-of select="rs:wrap-type-with-presence($presence, $typename)"/>
 </xsl:function>
 
