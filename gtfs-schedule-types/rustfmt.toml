@@ -1,0 +1,5 @@
+# blank_lines_lower_bound = 1
+hard_tabs = true
+newline_style = "Unix"
+# imports_layout = "HorizontalVertical"
+# normalize_doc_attributes = true
