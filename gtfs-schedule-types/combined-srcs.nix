@@ -2,26 +2,34 @@
 , craneLib
 , stdenvNoCC
 , gtfs-schedule-generated-rs-src
+, cargo
+, rustfmt
 
 }: stdenvNoCC.mkDerivation {
 	pname = "gtfs-schedule-types";
 	version = "0.0.1";
 
+	buildInputs = [
+		cargo
+		rustfmt
+	];
+
 	src = craneLib.cleanCargoSource (craneLib.path ./.);
 
 	buildPhase = lib.concatLines [
-		"set -x"
-		"cp ${gtfs-schedule-generated-rs-src}/*.rs ./src/"
-		"set +x"
+		# "set -x"
+		"install ${gtfs-schedule-generated-rs-src}/*.rs ./src/"
+		"cargo fmt"
+		# "set +x"
 	];
 
 	doCheck = false;
 
 	installPhase = (lib.concatLines [
-		"set -x"
-		"ls -la"
+		# "set -x"
+		# "ls -la"
 		"mkdir -p $out"
 		"cp -a . $out"
-		"set +x"
+		# "set +x"
 	]);
 }
