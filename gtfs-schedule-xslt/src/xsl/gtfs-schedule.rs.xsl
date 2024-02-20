@@ -31,26 +31,21 @@
 		</xsl:for-each>
 	</xsl:result-document>
 
-	<xsl:result-document href="gtfs-schedule/types.rs" method="text">
+	<xsl:result-document href="gtfs-schedule/field_types.rs" method="text">
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
 	<xsl:result-document href="gtfs-schedule/records.rs" method="text">
 		<xsl:call-template name="records"/>
 	</xsl:result-document>
-</xsl:template>
 
-<!-- #endregion Types -->
-<!-- Call by `@name` because we want access to the whole document -->
-<xsl:template name="types">
+	<xsl:result-document href="gtfs-schedule/schedule.rs" method="text">
 use crate::records::*;
-
-/* Types */
 
 /**
  * Container referencing all records contained in a GTFS Schedule dataset
  */
-#[derive(Debug)]
-pub struct GtfsSchedule {{
+#[derive(Debug, Default)]
+pub struct Dataset {{
 <xsl:for-each select="//records/record">
 /** __File Name:__ &bt;{name}&bt;
 
@@ -61,6 +56,13 @@ __Presence:__ {presence}
 	pub {substring-before(name, '.txt')}: {rs:wrap-type-with-presence(presence, concat("Vec&lt;", rs:struct-name-from-filename(name), "&gt;"))},
 </xsl:for-each>
 }}
+</xsl:result-document>
+</xsl:template>
+
+<!-- #endregion Types -->
+<!-- Call by `@name` because we want access to the whole document -->
+<xsl:template name="types">
+/* Types */
 
 // #region Field Types
 <xsl:apply-templates mode="type-definition" select="//types/type"/>
@@ -165,7 +167,7 @@ pub type <xsl:value-of select="$typeName"/> = <xsl:value-of select="rs:map-gtfs-
 <!-- #region Structs -->
 <!-- Call by `@name` because we want access to the whole document -->
 <xsl:template name="records">
-use crate::types::*;
+use crate::field_types::*;
 
 /* Structs */
 <xsl:apply-templates mode="struct" select="//records/record" />
