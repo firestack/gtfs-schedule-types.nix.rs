@@ -182,7 +182,9 @@ use crate::field_types::*;
 {serialize(description/x:body/node(), $xml-serialize-opts)}
 <!-- <xsl:copy-of select="serialize(description/x:body/*, <xsl:output method='html' indent='yes' />)"/> -->
  */
-#[derive(serde::Serialize, serde::Deserialize, Debug, Clone)]
+#[derive(Clone)]
+#[cfg_attr(feature = "debug", derive(Debug))]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
 	mode="struct"
 	select="fields/field"
