@@ -5,7 +5,7 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [features]
-default = ["debug", "serde", "from-dataset" ]
+default = [ "debug", "serde", "from-dataset" ]
 debug = []
 serde = [ "dep:serde" ]
 from-dataset = [ "serde", "dep:csv" ]
