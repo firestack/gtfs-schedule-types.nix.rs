@@ -1,14 +1,10 @@
 //! GTFS Schedule Types generated from the HTML Documentation
 //!
 
-/// Data types derived from GTFS Schedule
-pub mod field_types;
-/// Struct definitions derived from the Records and Fields of GTFS Schedule
-pub mod records;
+mod generated;
+pub use generated::{field_types, records, schedule::Dataset};
 
-mod schedule;
-pub use schedule::Dataset;
-
+/// Temporary type alias to provide generic error (Error type to be made discrete later)
 pub type Result<T, E = Box<dyn std::error::Error + Send + Sync + 'static>> =
 	core::result::Result<T, E>;
 

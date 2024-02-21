@@ -18,7 +18,8 @@
 
 	buildPhase = lib.concatLines [
 		# "set -x"
-		"install ${gtfs-schedule-generated-rs-src}/*.rs ./src/"
+		"mkdir -p ./src/generated"
+		"install ${gtfs-schedule-generated-rs-src}/generated/*.rs ./src/generated/"
 		"cargo fmt"
 		# "set +x"
 	];
