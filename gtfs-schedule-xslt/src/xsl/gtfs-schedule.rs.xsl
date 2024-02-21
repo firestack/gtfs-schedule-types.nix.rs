@@ -25,20 +25,20 @@
 <!-- Root Template -->
 <xsl:template match="/gtfs-schedule" mode="#default" saxon:explain="yes" >
 
-	<xsl:result-document href="gtfs-schedule/search.xml" method="xml" indent="yes">
+	<xsl:result-document href="debug/search.xml" method="xml" indent="yes">
 		<xsl:for-each select="distinct-values(//field/presence)">
 			<xsl:copy-of select="."/>
 		</xsl:for-each>
 	</xsl:result-document>
 
-	<xsl:result-document href="gtfs-schedule/field_types.rs" method="text">
+	<xsl:result-document href="generated/field_types.rs" method="text">
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
-	<xsl:result-document href="gtfs-schedule/records.rs" method="text">
+	<xsl:result-document href="generated/records.rs" method="text">
 		<xsl:call-template name="records"/>
 	</xsl:result-document>
 
-	<xsl:result-document href="gtfs-schedule/schedule.rs" method="text">
+	<xsl:result-document href="generated/schedule.rs" method="text">
 use crate::records::*;
 
 /**

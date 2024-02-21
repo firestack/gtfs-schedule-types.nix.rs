@@ -11,16 +11,14 @@
 	buildInputs = [ saxon-he ];
 
 	buildPhase = lib.concatLines [
-		"ls -la"
-		"mkdir $out"
-
 		"saxon-he -t \\"
 			"-s:${gtfs-schedule-xml} \\"
 			"-xsl:gtfs-schedule.rs.xsl"
 	];
 
 	installPhase = lib.concatLines [
-		"cp ./gtfs-schedule/* $out/"
+		"mkdir -p $out/generated"
+		"cp ./generated/* $out/generated"
 		"ln -s ${gtfs-schedule-xml} $out/gtfs-schedule.xml"
 	];
 }
