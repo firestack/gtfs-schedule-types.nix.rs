@@ -70,7 +70,7 @@
 		presence="{./following-sibling::x:p[1]/x:strong/text()}"
 	>
 		<name>{$record-name}</name>
-		<presence>{./following-sibling::x:p[1]/x:strong/text()}</presence>
+		<presence>{key('recordDescriptions', $record-name)/x:td[2]/node()}</presence>
 		<primary-key>
 			<xsl:for-each select="./following-sibling::x:p[2]/x:code">
 				<key>{./text()}</key>
