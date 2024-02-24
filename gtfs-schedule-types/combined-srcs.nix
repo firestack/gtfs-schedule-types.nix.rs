@@ -6,7 +6,7 @@
 , rustfmt
 
 }: stdenvNoCC.mkDerivation {
-	pname = "gtfs-schedule-types";
+	pname = "gtfs-schedule-types-srcs-combined";
 	version = "0.0.1";
 
 	buildInputs = [
