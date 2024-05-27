@@ -2,7 +2,6 @@
 	, makeScope
 	, newScope
 	, craneLib
-	, stdenv
 }:
 makeScope newScope (self: {
 	inherit craneLib;
