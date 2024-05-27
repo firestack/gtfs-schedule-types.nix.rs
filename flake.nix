@@ -27,23 +27,28 @@
 			];
 
 			perSystem = { pkgs, lib, self', system, ... }: {
+				legacyPackages.scope = pkgs.callPackage ./scope.nix {
+					makeScope = pkgs.lib.makeScope;
+					craneLib = crane.lib.${system};
+				};
+				legacyPackages.craneLib = crane.lib.${system};
+
 				packages = {
 					default = self'.packages.gtfs-schedule-types-rs-doc;
-				} // (
-					{
-						inherit (pkgs.callPackage ./scope.nix {
-							makeScope = pkgs.lib.makeScope;
-							craneLib = crane.lib.${system};
-						})
-							mbta-gtfs
-							gtfs-schedule-html
-							gtfs-schedule-xhtml
-							gtfs-schedule-xml
-							gtfs-schedule-generated-rs-src
-							gtfs-schedule-types-rs
-							gtfs-schedule-types-rs-doc;
-					}
-				);
+				} // (builtins.removeAttrs self'.legacyPackages.scope [
+					# scope outputs
+					"callPackage"
+					"newScope"
+					"override"
+					"overrideDerivation"
+					"overrideScope"
+					"overrideScope'"
+					"packages"
+					
+					# Ignored Inputs and Transiant Attributes
+					"craneLib"
+					"gtfs-schedule-types-rs-common-args"
+				]);
 
 				devshells.default = {
 					packages = [
