@@ -9,6 +9,9 @@ makeScope newScope (self: {
 	gtfs = self.callPackage ./gtfs-sources.nix {
 		gtfs-srcs = [
 			self.mbta-gtfs
+			self.denver-rtd-gtfs
+			self.nyc-bronx-gtfs
+			self.nyc-manhattan-gtfs
 		];
 	};
 
@@ -17,6 +20,24 @@ makeScope newScope (self: {
 		src-name = "mbta-2024-01-11";
 		url = "https://cdn.mbtace.com/archive/20240111.zip";
 		hash = "sha256-Nvo740l+eo/vnHzZ0qOIJwsUGrp/4CPDxTpXhVlrLnI=";
+	};
+
+	denver-rtd-gtfs = self.callPackage ./gtfs.nix {
+		name = "denver-rtd";
+		url = "https://www.rtd-denver.com/files/gtfs/google_transit.zip";
+		hash = "sha256-b9BqQYwlduf7TeUC/qtlqqfReUuqz1iZDidqsr7AgKs=";
+	};
+
+	nyc-bronx-gtfs = self.callPackage ./gtfs.nix {
+		name = "nyc-bronx-gtfs";
+		url = "http://web.mta.info/developers/data/nyct/bus/google_transit_bronx.zip";
+		hash = "sha256-GEQ3mwj543yCN4mNh9gsi3zjHaGFfLqNdOVx/EEMGso=";
+	};
+
+	nyc-manhattan-gtfs = self.callPackage ./gtfs.nix {
+		name = "nyc-manhattan-gtfs";
+		url = "http://web.mta.info/developers/data/nyct/bus/google_transit_manhattan.zip";
+		hash = "sha256-QHbAWWbTdMbkgdKh5FY3b4odvDpIYc//xU9LfHJNL/g=";
 	};
 
 	gtfs-schedule-html = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-html.nix {};
