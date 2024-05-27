@@ -1,7 +1,7 @@
 { lib
-	, makeScope
-	, newScope
-	, craneLib
+, makeScope
+, newScope
+, craneLib
 }:
 makeScope newScope (self: {
 	inherit craneLib;
