@@ -3,7 +3,6 @@
 	, newScope
 	, craneLib
 	, stdenv
-	, libiconv
 }:
 makeScope newScope (self: {
 	inherit craneLib;
@@ -23,11 +22,6 @@ makeScope newScope (self: {
 
 		strictDeps = true;
 		doCheck = false;
-
-		buildInputs = [] ++ lib.optionals stdenv.isDarwin [
-			libiconv
-		];
-
 	};
 
 	gtfs-schedule-types-rs = self.callPackage (./gtfs-schedule-types) {};
