@@ -7,7 +7,10 @@ runCommand "gtfs-schedule.xhtml" {
 	buildInputs = [html-tidy];
 } (lib.concatLines [
 	"tidy \\"
-		"-asxhtml \\"
+		"-asxml \\"
+		"-numeric \\"
+		"--preserve-entities yes \\"
+		"--fix-uri yes \\"
 		"--new-inline-tags c \\"
 		"-o $out \\"
 		"${gtfs-schedule-html} \\"
