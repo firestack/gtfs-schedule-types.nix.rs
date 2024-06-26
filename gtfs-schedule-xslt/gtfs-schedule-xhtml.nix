@@ -9,7 +9,7 @@ runCommand "gtfs-schedule.xhtml" {
 	"tidy \\"
 		"-asxml \\"
 		"-numeric \\"
-		"--preserve-entities yes \\"
+		"--preserve-entities no \\"
 		"--fix-uri yes \\"
 		"--new-inline-tags c \\"
 		"-o $out \\"
