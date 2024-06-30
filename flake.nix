@@ -36,7 +36,7 @@
 				packages = {
 					default = self'.packages.gtfs-schedule-types-rs-doc;
 				} // (builtins.removeAttrs self'.legacyPackages.scope [
-					# scope outputs
+					# Scope outputs
 					"callPackage"
 					"newScope"
 					"override"
@@ -45,7 +45,7 @@
 					"overrideScope'"
 					"packages"
 
-					# Ignored Inputs and Transiant Attributes
+					# Ignored inputs and transient attributes
 					"craneLib"
 					"gtfs-schedule-types-rs-common-args"
 				]);
