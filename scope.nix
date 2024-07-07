@@ -6,7 +6,18 @@
 makeScope newScope (self: {
 	inherit craneLib;
 
-	mbta-gtfs = self.callPackage ./mbta-gtfs.nix {};
+	gtfs = self.callPackage ./gtfs-sources.nix {
+		gtfs-srcs = [
+			self.mbta-gtfs
+		];
+	};
+
+	mbta-gtfs = self.callPackage ./gtfs.nix {
+		name = "mbta";
+		src-name = "mbta-2024-01-11";
+		url = "https://cdn.mbtace.com/archive/20240111.zip";
+		hash = "sha256-Nvo740l+eo/vnHzZ0qOIJwsUGrp/4CPDxTpXhVlrLnI=";
+	};
 
 	gtfs-schedule-html = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-html.nix {};
 
