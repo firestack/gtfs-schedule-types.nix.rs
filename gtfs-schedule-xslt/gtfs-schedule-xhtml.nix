@@ -6,5 +6,10 @@
 runCommand "gtfs-schedule.xhtml" {
 	buildInputs = [html-tidy];
 } (lib.concatLines [
-	"tidy -asxhtml --new-inline-tags c -o $out ${gtfs-schedule-html} || true"
+	"tidy \\"
+		"-asxhtml \\"
+		"--new-inline-tags c \\"
+		"-o $out \\"
+		"${gtfs-schedule-html} \\"
+		"|| true"
 ])
