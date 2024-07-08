@@ -23,7 +23,10 @@ makeScope newScope (self: {
 
 	gtfs-schedule-xhtml = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-xhtml.nix {};
 
-	gtfs-schedule-xml = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-xml.nix {};
+	gtfs-schedule-xml = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-xml.nix {
+		gtfs-schedule-xhtml = ./gtfs-schedule-xslt/src/vendored/gtfs-schedule.xhtml;
+		include-docs = false;
+	};
 
 	gtfs-schedule-generated-rs-src = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-generated-rs-src.nix {};
 
