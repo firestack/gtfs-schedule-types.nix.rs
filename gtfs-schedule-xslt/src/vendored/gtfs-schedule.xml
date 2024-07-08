@@ -532,14 +532,14 @@
             <field>
                <name>pickup_booking_rule_id</name>
                <type>
-                  <name>ID referencing  booking_rules.booking_rule_id</name>
+                  <name>Foreign ID referencing  booking_rules.booking_rule_id</name>
                </type>
                <presence>Optional</presence>
             </field>
             <field>
                <name>drop_off_booking_rule_id</name>
                <type>
-                  <name>ID referencing  booking_rules.booking_rule_id</name>
+                  <name>Foreign ID referencing  booking_rules.booking_rule_id</name>
                </type>
                <presence>Optional</presence>
             </field>
@@ -1494,7 +1494,7 @@ fare_product_id, transfer_count, duration_limit</key>
             <field>
                <name>prior_notice_service_id</name>
                <type>
-                  <name>ID referencing  calendar.service_id</name>
+                  <name>Foreign ID referencing  calendar.service_id</name>
                </type>
                <presence>Conditionally Forbidden</presence>
             </field>

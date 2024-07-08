@@ -2405,7 +2405,7 @@ the times are approximate. Valid options are:<br />
 </tr>
 <tr>
 <td><code>pickup_booking_rule_id</code></td>
-<td>ID referencing <code>booking_rules.booking_rule_id</code></td>
+<td>Foreign ID referencing <code>booking_rules.booking_rule_id</code></td>
 <td>Optional</td>
 <td>Identifies the boarding booking rule at this stop time.<br />
 <br />
@@ -2413,7 +2413,7 @@ Recommended when <code>pickup_type=2</code>.</td>
 </tr>
 <tr>
 <td><code>drop_off_booking_rule_id</code></td>
-<td>ID referencing <code>booking_rules.booking_rule_id</code></td>
+<td>Foreign ID referencing <code>booking_rules.booking_rule_id</code></td>
 <td>Optional</td>
 <td>Identifies the alighting booking rule at this stop time.<br />
 <br />
@@ -4486,7 +4486,7 @@ is defined.<br />
 </tr>
 <tr>
 <td><code>prior_notice_service_id</code></td>
-<td>ID referencing <code>calendar.service_id</code></td>
+<td>Foreign ID referencing <code>calendar.service_id</code></td>
 <td><strong>Conditionally Forbidden</strong></td>
 <td>Indicates the service days on which
 <code>prior_notice_last_day</code> or
