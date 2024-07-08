@@ -59,6 +59,7 @@
 						pkgs.cargo
 						pkgs.clippy
 						pkgs.rustfmt
+						pkgs.html-tidy
 					];
 
 					commands = [{
