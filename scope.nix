@@ -28,7 +28,9 @@ makeScope newScope (self: {
 		include-docs = false;
 	};
 
-	gtfs-schedule-generated-rs-src = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-generated-rs-src.nix {};
+	gtfs-schedule-generated-rs-src = self.callPackage ./gtfs-schedule-xslt/gtfs-schedule-generated-rs-src.nix {
+		gtfs-schedule-xml = ./gtfs-schedule-xslt/src/vendored/gtfs-schedule.xml;
+	};
 
 	gtfs-schedule-types-rs-common-args = {
 		src = self.callPackage ./gtfs-schedule-types/combined-srcs.nix {};
