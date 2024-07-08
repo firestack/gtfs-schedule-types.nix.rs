@@ -460,14 +460,6 @@
                <presence>Conditionally Forbidden</presence>
             </field>
             <field>
-               <name>location_id</name>
-               <type>
-                  <name>Foreign ID referencing  id  from
- locations.geojson</name>
-               </type>
-               <presence>Conditionally Forbidden</presence>
-            </field>
-            <field>
                <name>stop_sequence</name>
                <type>
                   <name>Non-negative integer</name>
@@ -1431,87 +1423,6 @@ fare_product_id, transfer_count, duration_limit</key>
                <name>stop_id</name>
                <type>
                   <name>Foreign ID referencing  stops.stop_id</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-         </fields>
-      </record>
-      <record id="locations.geojson" presence="Optional">
-         <name>locations.geojson</name>
-         <presence>Optional</presence>
-         <primary-key/>
-         <fields>
-            <field>
-               <name>-  type</name>
-               <type>
-                  <name>String</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-            <field>
-               <name>-  features</name>
-               <type>
-                  <name>Array</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-            <field>
-               <name>    -  type</name>
-               <type>
-                  <name>String</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-            <field>
-               <name>    -  id</name>
-               <type>
-                  <name>String</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-            <field>
-               <name>    -  properties</name>
-               <type>
-                  <name>Object</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-            <field>
-               <name>
-        -  stop_name</name>
-               <type>
-                  <name>String</name>
-               </type>
-               <presence>Optional</presence>
-            </field>
-            <field>
-               <name>
-        -  stop_desc</name>
-               <type>
-                  <name>String</name>
-               </type>
-               <presence>Optional</presence>
-            </field>
-            <field>
-               <name>    -  geometry</name>
-               <type>
-                  <name>Object</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-            <field>
-               <name>
-        -  type</name>
-               <type>
-                  <name>String</name>
-               </type>
-               <presence>Required</presence>
-            </field>
-            <field>
-               <name>
-        -  coordinates</name>
-               <type>
-                  <name>Array</name>
                </type>
                <presence>Required</presence>
             </field>
