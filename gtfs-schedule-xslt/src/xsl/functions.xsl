@@ -195,6 +195,8 @@
 		<xsl:when test="$typeName='PathwayUid'">GtfsId</xsl:when>
 		<xsl:when test="$typeName='LevelUid'">GtfsId</xsl:when>
 		<xsl:when test="$typeName='AttributionUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='LocationGroupUid'">GtfsId</xsl:when>
+		<xsl:when test="$typeName='BookingRuleUid'">GtfsId</xsl:when>
 
 
 		<xsl:when test="$typeName='BlockId'">GtfsId</xsl:when>
