@@ -39,5 +39,9 @@ makeScope newScope (self: {
 	gtfs-schedule-types-rs-doc = self.callPackage (./gtfs-schedule-types/rustdoc.nix) {};
 
 	gtfs-schedule-types-rs-cargo-artifacts = self.callPackage ./gtfs-schedule-types/cargo-artifacts.nix {
+		gtfs-schedule-types-rs-common-args = {
+			src = craneLib.cleanCargoSource (craneLib.path ./gtfs-schedule-types);
+			strictDeps = true;
+		};
 	};
 })
