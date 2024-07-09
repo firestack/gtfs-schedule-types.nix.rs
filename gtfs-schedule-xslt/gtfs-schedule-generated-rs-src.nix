@@ -12,13 +12,10 @@
 
 	buildPhase = lib.concatLines [
 		"saxon-he -t \\"
+			"out=$out/ \\"
 			"-s:${gtfs-schedule-xml} \\"
 			"-xsl:gtfs-schedule.rs.xsl"
 	];
 
-	installPhase = lib.concatLines [
-		"mkdir -p $out/generated"
-		"cp ./generated/* $out/generated"
-		"ln -s ${gtfs-schedule-xml} $out/gtfs-schedule.xml"
-	];
+	dontInstall = true;
 }
