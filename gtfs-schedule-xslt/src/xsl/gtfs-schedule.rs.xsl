@@ -60,6 +60,33 @@ __Presence:__ {presence}
 	pub {substring-before(name, '.txt')}: {rs:wrap-type-with-presence(presence, concat("Vec&lt;", rs:struct-name-from-filename(name), "&gt;"))},
 </xsl:for-each>
 }}
+
+<![CDATA[
+#[cfg(feature = "from-dataset")]
+use std::{{
+	convert::{{AsRef, From}},
+	path::Path,
+}};
+
+#[cfg(feature = "from-dataset")]
+use crate::parse_csv;
+
+#[cfg(feature = "from-dataset")]
+impl<T: AsRef<Path>> From<T> for Dataset {{
+	fn from(dataset_path: T) -> Self {{
+		let dataset_path = dataset_path.as_ref();
+]]>
+		Self {{<xsl:for-each select="//records/record">
+			{substring-before(name, '.txt')}: parse_csv(&amp;dataset_path.join(
+				"{name}"
+			))<xsl:choose>
+				<xsl:when test="not(rs:type_is_optional(presence))">.expect("File '{name}' is required, but failed to parse")</xsl:when>
+				<xsl:otherwise>.ok()</xsl:otherwise>
+			</xsl:choose>,
+		</xsl:for-each>
+		}}
+	}}
+}}
 </xsl:result-document>
 </xsl:template>
 
