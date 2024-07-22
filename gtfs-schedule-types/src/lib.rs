@@ -1,6 +1,7 @@
 //! GTFS Schedule Types generated from the HTML Documentation
 //!
 
+/// Generated Code
 mod generated;
 pub use generated::{field_types, records, schedule::Dataset};
 
