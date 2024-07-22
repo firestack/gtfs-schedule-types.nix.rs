@@ -1,0 +1,1765 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gtfs-schedule>
+   <types>
+      <title>Field Types</title>
+      <type>
+         <name>Color</name>
+      </type>
+      <type>
+         <name>Currency code</name>
+      </type>
+      <type>
+         <name>Currency amount</name>
+      </type>
+      <type>
+         <name>Date</name>
+      </type>
+      <type>
+         <name>Email</name>
+      </type>
+      <type>
+         <name>Enum</name>
+      </type>
+      <type>
+         <name>ID</name>
+      </type>
+      <type>
+         <name>Language code</name>
+      </type>
+      <type>
+         <name>Latitude</name>
+      </type>
+      <type>
+         <name>Longitude</name>
+      </type>
+      <type>
+         <name>Float</name>
+      </type>
+      <type>
+         <name>Integer</name>
+      </type>
+      <type>
+         <name>Phone number</name>
+      </type>
+      <type>
+         <name>Time</name>
+      </type>
+      <type>
+         <name>Text</name>
+      </type>
+      <type>
+         <name>Timezone</name>
+      </type>
+      <type>
+         <name>URL</name>
+      </type>
+   </types>
+   <records>
+      <title>Field Definitions</title>
+      <record id="agency.txt" presence="Required">
+         <name>agency.txt</name>
+         <presence>Required</presence>
+         <primary-key>
+            <key>agency_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>agency_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>agency_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>agency_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>agency_timezone</name>
+               <type>
+                  <name>Timezone</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>agency_lang</name>
+               <type>
+                  <name>Language code</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>agency_phone</name>
+               <type>
+                  <name>Phone number</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>agency_fare_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>agency_email</name>
+               <type>
+                  <name>Email</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="stops.txt" presence="Required">
+         <name>stops.txt</name>
+         <presence>Required</presence>
+         <primary-key>
+            <key>stop_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>stop_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>stop_code</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>stop_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>tts_stop_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>stop_desc</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>stop_lat</name>
+               <type>
+                  <name>Latitude</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>stop_lon</name>
+               <type>
+                  <name>Longitude</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>zone_id</name>
+               <type>
+                  <name>ID</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>stop_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>location_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>parent_station</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>stop_timezone</name>
+               <type>
+                  <name>Timezone</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>wheelchair_boarding</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>level_id</name>
+               <type>
+                  <name>Foreign ID referencing  levels.level_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>platform_code</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="routes.txt" presence="Required">
+         <name>routes.txt</name>
+         <presence>Required</presence>
+         <primary-key>
+            <key>route_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>route_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>agency_id</name>
+               <type>
+                  <name>Foreign ID referencing  agency.agency_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>route_short_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>route_long_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>route_desc</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>route_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>route_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>route_color</name>
+               <type>
+                  <name>Color</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>route_text_color</name>
+               <type>
+                  <name>Color</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>route_sort_order</name>
+               <type>
+                  <name>Non-negative integer</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>continuous_pickup</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>continuous_drop_off</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>network_id</name>
+               <type>
+                  <name>ID</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="trips.txt" presence="Required">
+         <name>trips.txt</name>
+         <presence>Required</presence>
+         <primary-key>
+            <key>trip_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>route_id</name>
+               <type>
+                  <name>Foreign ID referencing  routes.route_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>service_id</name>
+               <type>
+                  <name>Foreign ID referencing  calendar.service_id  or
+ calendar_dates.service_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>trip_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>trip_headsign</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>trip_short_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>direction_id</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>block_id</name>
+               <type>
+                  <name>ID</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>shape_id</name>
+               <type>
+                  <name>Foreign ID referencing  shapes.shape_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>wheelchair_accessible</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>bikes_allowed</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="stop_times.txt" presence="Required">
+         <name>stop_times.txt</name>
+         <presence>Required</presence>
+         <primary-key>
+            <key>trip_id</key>
+            <key>stop_sequence</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>trip_id</name>
+               <type>
+                  <name>Foreign ID referencing  trips.trip_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>arrival_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>departure_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>stop_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>location_group_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ location_groups.location_group_id</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>stop_sequence</name>
+               <type>
+                  <name>Non-negative integer</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>stop_headsign</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>start_pickup_drop_off_window</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>end_pickup_drop_off_window</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>pickup_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>drop_off_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>continuous_pickup</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>continuous_drop_off</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>shape_dist_traveled</name>
+               <type>
+                  <name>Non-negative float</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>timepoint</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Recommended</presence>
+            </field>
+            <field>
+               <name>pickup_booking_rule_id</name>
+               <type>
+                  <name>Foreign ID referencing  booking_rules.booking_rule_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>drop_off_booking_rule_id</name>
+               <type>
+                  <name>Foreign ID referencing  booking_rules.booking_rule_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="calendar.txt" presence="Conditionally Required">
+         <name>calendar.txt</name>
+         <presence>Conditionally Required</presence>
+         <primary-key>
+            <key>service_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>service_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>monday</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>tuesday</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>wednesday</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>thursday</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>friday</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>saturday</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>sunday</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>start_date</name>
+               <type>
+                  <name>Date</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>end_date</name>
+               <type>
+                  <name>Date</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="calendar_dates.txt" presence="Conditionally Required">
+         <name>calendar_dates.txt</name>
+         <presence>Conditionally Required</presence>
+         <primary-key>
+            <key>service_id</key>
+            <key>date</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>service_id</name>
+               <type>
+                  <name>Foreign ID referencing  calendar.service_id  or
+ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>date</name>
+               <type>
+                  <name>Date</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>exception_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="fare_attributes.txt" presence="Optional">
+         <name>fare_attributes.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>fare_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>fare_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>price</name>
+               <type>
+                  <name>Non-negative float</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>currency_type</name>
+               <type>
+                  <name>Currency code</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>payment_method</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>transfers</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>agency_id</name>
+               <type>
+                  <name>Foreign ID referencing  agency.agency_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>transfer_duration</name>
+               <type>
+                  <name>Non-negative integer</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="fare_rules.txt" presence="Optional">
+         <name>fare_rules.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>*</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>fare_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ fare_attributes.fare_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>route_id</name>
+               <type>
+                  <name>Foreign ID referencing  routes.route_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>origin_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.zone_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>destination_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.zone_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>contains_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.zone_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="timeframes.txt" presence="Optional">
+         <name>timeframes.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>*</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>timeframe_group_id</name>
+               <type>
+                  <name>ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>start_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>end_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>service_id</name>
+               <type>
+                  <name>Foreign ID referencing  calendar.service_id  or
+ calendar_dates.service_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="fare_media.txt" presence="Optional">
+         <name>fare_media.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>fare_media_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>fare_media_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>fare_media_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>fare_media_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="fare_products.txt" presence="Optional">
+         <name>fare_products.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>fare_product_id</key>
+            <key>fare_media_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>fare_product_id</name>
+               <type>
+                  <name>ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>fare_product_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>fare_media_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ fare_media.fare_media_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>amount</name>
+               <type>
+                  <name>Currency amount</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>currency</name>
+               <type>
+                  <name>Currency code</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="fare_leg_rules.txt" presence="Optional">
+         <name>fare_leg_rules.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>network_id, from_area_id, to_area_id,
+from_timeframe_group_id, to_timeframe_group_id,
+fare_product_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>leg_group_id</name>
+               <type>
+                  <name>ID</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>network_id</name>
+               <type>
+                  <name>Foreign ID referencing  routes.network_id  or
+ networks.network_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>from_area_id</name>
+               <type>
+                  <name>Foreign ID referencing  areas.area_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>to_area_id</name>
+               <type>
+                  <name>Foreign ID referencing  areas.area_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>from_timeframe_group_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ timeframes.timeframe_group_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>to_timeframe_group_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ timeframes.timeframe_group_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>fare_product_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ fare_products.fare_product_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>rule_priority</name>
+               <type>
+                  <name>Non-negative integer</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="fare_transfer_rules.txt" presence="Optional">
+         <name>fare_transfer_rules.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>from_leg_group_id, to_leg_group_id,
+fare_product_id, transfer_count, duration_limit</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>from_leg_group_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ fare_leg_rules.leg_group_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>to_leg_group_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ fare_leg_rules.leg_group_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>transfer_count</name>
+               <type>
+                  <name>Non-zero integer</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>duration_limit</name>
+               <type>
+                  <name>Positive integer</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>duration_limit_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>fare_transfer_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>fare_product_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ fare_products.fare_product_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="areas.txt" presence="Optional">
+         <name>areas.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>area_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>area_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>area_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="stop_areas.txt" presence="Optional">
+         <name>stop_areas.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>*</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>area_id</name>
+               <type>
+                  <name>Foreign ID referencing  areas.area_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>stop_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="networks.txt" presence="Conditionally Forbidden">
+         <name>networks.txt</name>
+         <presence>Conditionally Forbidden</presence>
+         <primary-key>
+            <key>network_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>network_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>network_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="route_networks.txt" presence="Conditionally Forbidden">
+         <name>route_networks.txt</name>
+         <presence>Conditionally Forbidden</presence>
+         <primary-key>
+            <key>route_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>network_id</name>
+               <type>
+                  <name>Foreign ID referencing  networks.network_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>route_id</name>
+               <type>
+                  <name>Foreign ID referencing  routes.route_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="shapes.txt" presence="Optional">
+         <name>shapes.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>shape_id</key>
+            <key>shape_pt_sequence</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>shape_id</name>
+               <type>
+                  <name>ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>shape_pt_lat</name>
+               <type>
+                  <name>Latitude</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>shape_pt_lon</name>
+               <type>
+                  <name>Longitude</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>shape_pt_sequence</name>
+               <type>
+                  <name>Non-negative integer</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>shape_dist_traveled</name>
+               <type>
+                  <name>Non-negative float</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="frequencies.txt" presence="Optional">
+         <name>frequencies.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>trip_id</key>
+            <key>start_time</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>trip_id</name>
+               <type>
+                  <name>Foreign ID referencing  trips.trip_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>start_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>end_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>headway_secs</name>
+               <type>
+                  <name>Positive integer</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>exact_times</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="transfers.txt" presence="Optional">
+         <name>transfers.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>from_stop_id</key>
+            <key>to_stop_id</key>
+            <key>from_trip_id</key>
+            <key>to_trip_id</key>
+            <key>from_route_id</key>
+            <key>to_route_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>from_stop_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>to_stop_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>from_route_id</name>
+               <type>
+                  <name>Foreign ID referencing  routes.route_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>to_route_id</name>
+               <type>
+                  <name>Foreign ID referencing  routes.route_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>from_trip_id</name>
+               <type>
+                  <name>Foreign ID referencing  trips.trip_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>to_trip_id</name>
+               <type>
+                  <name>Foreign ID referencing  trips.trip_id</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>transfer_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>min_transfer_time</name>
+               <type>
+                  <name>Non-negative integer</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="pathways.txt" presence="Optional">
+         <name>pathways.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>pathway_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>pathway_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>from_stop_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>to_stop_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>pathway_mode</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>is_bidirectional</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>length</name>
+               <type>
+                  <name>Non-negative float</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>traversal_time</name>
+               <type>
+                  <name>Positive integer</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>stair_count</name>
+               <type>
+                  <name>Non-null integer</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>max_slope</name>
+               <type>
+                  <name>Float</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>min_width</name>
+               <type>
+                  <name>Positive float</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>signposted_as</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>reversed_signposted_as</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="levels.txt" presence="Conditionally Required">
+         <name>levels.txt</name>
+         <presence>Conditionally Required</presence>
+         <primary-key>
+            <key>level_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>level_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>level_index</name>
+               <type>
+                  <name>Float</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>level_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="location_groups.txt" presence="Optional">
+         <name>location_groups.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>location_group_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>location_group_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>location_group_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="location_group_stops.txt" presence="Optional">
+         <name>location_group_stops.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>*</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>location_group_id</name>
+               <type>
+                  <name>Foreign ID referencing
+ location_groups.location_group_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>stop_id</name>
+               <type>
+                  <name>Foreign ID referencing  stops.stop_id</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="booking_rules.txt" presence="Optional">
+         <name>booking_rules.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>booking_rule_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>booking_rule_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>booking_type</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>prior_notice_duration_min</name>
+               <type>
+                  <name>Integer</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>prior_notice_duration_max</name>
+               <type>
+                  <name>Integer</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>prior_notice_last_day</name>
+               <type>
+                  <name>Integer</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>prior_notice_last_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>prior_notice_start_day</name>
+               <type>
+                  <name>Integer</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>prior_notice_start_time</name>
+               <type>
+                  <name>Time</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>prior_notice_service_id</name>
+               <type>
+                  <name>Foreign ID referencing  calendar.service_id</name>
+               </type>
+               <presence>Conditionally Forbidden</presence>
+            </field>
+            <field>
+               <name>message</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>pickup_message</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>drop_off_message</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>phone_number</name>
+               <type>
+                  <name>Phone number</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>info_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>booking_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="translations.txt" presence="Optional">
+         <name>translations.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>table_name</key>
+            <key>field_name</key>
+            <key>language</key>
+            <key>record_id</key>
+            <key>record_sub_id</key>
+            <key>field_value</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>table_name</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>field_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>language</name>
+               <type>
+                  <name>Language code</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>translation</name>
+               <type>
+                  <name>Text or URL or Email or Phone number</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>record_id</name>
+               <type>
+                  <name>Foreign ID</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>record_sub_id</name>
+               <type>
+                  <name>Foreign ID</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+            <field>
+               <name>field_value</name>
+               <type>
+                  <name>Text or URL or Email or Phone number</name>
+               </type>
+               <presence>Conditionally Required</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="feed_info.txt" presence="RecommendedRequired">
+         <name>feed_info.txt</name>
+         <presence>RecommendedRequired</presence>
+         <primary-key/>
+         <fields>
+            <field>
+               <name>feed_publisher_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>feed_publisher_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>feed_lang</name>
+               <type>
+                  <name>Language code</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>default_lang</name>
+               <type>
+                  <name>Language code</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>feed_start_date</name>
+               <type>
+                  <name>Date</name>
+               </type>
+               <presence>Recommended</presence>
+            </field>
+            <field>
+               <name>feed_end_date</name>
+               <type>
+                  <name>Date</name>
+               </type>
+               <presence>Recommended</presence>
+            </field>
+            <field>
+               <name>feed_version</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Recommended</presence>
+            </field>
+            <field>
+               <name>feed_contact_email</name>
+               <type>
+                  <name>Email</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>feed_contact_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+      <record id="attributions.txt" presence="Optional">
+         <name>attributions.txt</name>
+         <presence>Optional</presence>
+         <primary-key>
+            <key>attribution_id</key>
+         </primary-key>
+         <fields>
+            <field>
+               <name>attribution_id</name>
+               <type>
+                  <name>Unique ID</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>agency_id</name>
+               <type>
+                  <name>Foreign ID referencing  agency.agency_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>route_id</name>
+               <type>
+                  <name>Foreign ID referencing  routes.route_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>trip_id</name>
+               <type>
+                  <name>Foreign ID referencing  trips.trip_id</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>organization_name</name>
+               <type>
+                  <name>Text</name>
+               </type>
+               <presence>Required</presence>
+            </field>
+            <field>
+               <name>is_producer</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>is_operator</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>is_authority</name>
+               <type>
+                  <name>Enum</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>attribution_url</name>
+               <type>
+                  <name>URL</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>attribution_email</name>
+               <type>
+                  <name>Email</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+            <field>
+               <name>attribution_phone</name>
+               <type>
+                  <name>Phone number</name>
+               </type>
+               <presence>Optional</presence>
+            </field>
+         </fields>
+      </record>
+   </records>
+</gtfs-schedule>
