@@ -4,15 +4,17 @@
 ]>
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:saxon="http://saxon.sf.net/"
 	xmlns:rs="https://www.rust-lang.org.kaylafire.me/"
-	xmlns:xs="math"
 	xmlns:x="http://www.w3.org/1999/xhtml"
 
 	exclude-result-prefixes="#all"
 	expand-text="yes"
 	version="3.0"
 >
+<xsl:param name="out" as="xs:string" select="'.'" />
+<xsl:param name="debug" as="xs:boolean" select="false()" />
 <xsl:import href="./markdown.xsl" />
 <xsl:include href="./functions.xsl" />
 <xsl:output method="adaptive" />
@@ -25,20 +27,22 @@
 <!-- Root Template -->
 <xsl:template match="/gtfs-schedule" mode="#default" saxon:explain="yes" >
 
-	<xsl:result-document href="debug/search.xml" method="xml" indent="yes">
-		<xsl:for-each select="distinct-values(//field/presence)">
-			<xsl:copy-of select="."/>
-		</xsl:for-each>
-	</xsl:result-document>
+	<xsl:if test="$debug = true()">
+		<xsl:result-document href="{$out}/debug/search.xml" method="xml" indent="yes">
+			<xsl:for-each select="distinct-values(//field/presence)">
+				<xsl:copy-of select="."/>
+			</xsl:for-each>
+		</xsl:result-document>
+	</xsl:if>
 
-	<xsl:result-document href="generated/field_types.rs" method="text">
+	<xsl:result-document href="{$out}/generated/field_types.rs" method="text">
 		<xsl:call-template name="types"/>
 	</xsl:result-document>
-	<xsl:result-document href="generated/records.rs" method="text">
+	<xsl:result-document href="{$out}/generated/records.rs" method="text">
 		<xsl:call-template name="records"/>
 	</xsl:result-document>
 
-	<xsl:result-document href="generated/schedule.rs" method="text">
+	<xsl:result-document href="{$out}/generated/schedule.rs" method="text">
 use crate::records::*;
 
 /**
