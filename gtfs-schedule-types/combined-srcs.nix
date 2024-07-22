@@ -17,20 +17,15 @@
 	src = craneLib.cleanCargoSource (craneLib.path ./.);
 
 	buildPhase = lib.concatLines [
-		# "set -x"
 		"mkdir -p ./src/generated"
 		"install ${gtfs-schedule-generated-rs-src}/generated/*.rs ./src/generated/"
 		"cargo fmt"
-		# "set +x"
 	];
 
 	doCheck = false;
 
 	installPhase = (lib.concatLines [
-		# "set -x"
-		# "ls -la"
 		"mkdir -p $out"
 		"cp -a . $out"
-		# "set +x"
 	]);
 }

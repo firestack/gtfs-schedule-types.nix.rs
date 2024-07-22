@@ -14,17 +14,11 @@
 	buildInputs = [ saxon-he ];
 
 	buildPhase = lib.concatLines [
-		"ls -la"
-		# "mkdir $out"
-
 		"saxon-he -t \\"
 			"-s:${gtfs-schedule-xhtml} \\"
-			"-xsl:gtfs-schedule.xml.xsl \\"
-			"-o:$out"
+			"-o:$out \\"
+			"-xsl:gtfs-schedule.xml.xsl"
 	];
 
 	dontInstall = true;
-	# installPhase = lib.concatLines [
-	# 	"cp ./ $out/"
-	# ];
 }
