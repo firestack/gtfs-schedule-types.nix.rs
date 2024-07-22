@@ -118,16 +118,21 @@
 	<xsl:value-of select="rs:wrap-type-with-presence($presence, $typename)"/>
 </xsl:function>
 
+<xsl:function name="rs:type_is_optional">
+	<xsl:param name="presence"/>
+	<xsl:copy-of select="
+		$presence='Optional' or
+		$presence='Conditionally Required' or
+		$presence='Conditionally Forbidden' or
+		$presence='Recommended'
+	"/>
+</xsl:function>
+
 <xsl:function name="rs:wrap-type-with-presence">
 	<xsl:param name="presence"/>
 	<xsl:param name="typename"/>
 	<xsl:choose>
-		<xsl:when test="
-			$presence='Optional' or
-			$presence='Conditionally Required' or
-			$presence='Conditionally Forbidden' or
-			$presence='Recommended'
-			">
+		<xsl:when test="rs:type_is_optional($presence)">
 			<xsl:text>Option&lt;{$typename}&gt;</xsl:text>
 		</xsl:when>
 		<xsl:otherwise><xsl:value-of select="$typename"/></xsl:otherwise>
