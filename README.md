@@ -7,19 +7,19 @@ flowchart TD
 	gtfs_schedule_source(gtfs.org/schedule/reference.html)
 	
 	-- Fetch with Nix -->
-		html{{HTML}}
+		html{{GTFS Reference HTML}}
 
 	-- HTML Tidy -->
-		xhtml{{XHTML}}
+		xhtml{{GTFS Reference as XHTML}}
 
 	-- XSLT -->
-		xml{{XML}}
+		xml{{Structured XML Type Definitions}}
 
 	-- XSLT -->
-		rs_sources{{Rust Code}}
+		rs_sources{{Rust Type Definition Code}}
 
-	-- Generated Rust Sources -->
-		gtfs_schedule_types_rs[[GTFS Schedule Types Library]]
+	-. Consumes Generated Rust Sources .->
+		gtfs_schedule_types_rs[[GTFS Schedule Types Rust Library]]
 
 	gtfs_schedule_types_rs -- Rustler --> Elixir
 	gtfs_schedule_types_rs -- ??? --> SQLite
