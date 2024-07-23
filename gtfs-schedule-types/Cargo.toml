@@ -9,6 +9,8 @@ repository = "https://github.com/firestack/gtfs-schedule-types.nix.rs/"
 default = ["only-type-definitions"]
 only-type-definitions = []
 
+all = ["debug", "serde", "from-dataset"]
+
 # Implement `Debug` for `Records` and `Dataset`
 debug = []
 
