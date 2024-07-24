@@ -240,3 +240,139 @@ __Presence:__ Optional
 	pub attributions: Option<Vec<Attributions>>,
 
 }
+
+
+#[cfg(feature = "from-dataset")]
+use std::{
+	convert::{AsRef, From},
+	path::Path,
+};
+
+#[cfg(feature = "from-dataset")]
+use crate::parse_csv;
+
+#[cfg(feature = "from-dataset")]
+impl<T: AsRef<Path>> From<T> for Dataset {
+	fn from(dataset_path: T) -> Self {
+		let dataset_path = dataset_path.as_ref();
+
+		Self {
+			agency: parse_csv(&dataset_path.join(
+				"agency.txt"
+			)).expect("File 'agency.txt' is required, but failed to parse"),
+		
+			stops: parse_csv(&dataset_path.join(
+				"stops.txt"
+			)).expect("File 'stops.txt' is required, but failed to parse"),
+		
+			routes: parse_csv(&dataset_path.join(
+				"routes.txt"
+			)).expect("File 'routes.txt' is required, but failed to parse"),
+		
+			trips: parse_csv(&dataset_path.join(
+				"trips.txt"
+			)).expect("File 'trips.txt' is required, but failed to parse"),
+		
+			stop_times: parse_csv(&dataset_path.join(
+				"stop_times.txt"
+			)).expect("File 'stop_times.txt' is required, but failed to parse"),
+		
+			calendar: parse_csv(&dataset_path.join(
+				"calendar.txt"
+			)).ok(),
+		
+			calendar_dates: parse_csv(&dataset_path.join(
+				"calendar_dates.txt"
+			)).ok(),
+		
+			fare_attributes: parse_csv(&dataset_path.join(
+				"fare_attributes.txt"
+			)).ok(),
+		
+			fare_rules: parse_csv(&dataset_path.join(
+				"fare_rules.txt"
+			)).ok(),
+		
+			timeframes: parse_csv(&dataset_path.join(
+				"timeframes.txt"
+			)).ok(),
+		
+			fare_media: parse_csv(&dataset_path.join(
+				"fare_media.txt"
+			)).ok(),
+		
+			fare_products: parse_csv(&dataset_path.join(
+				"fare_products.txt"
+			)).ok(),
+		
+			fare_leg_rules: parse_csv(&dataset_path.join(
+				"fare_leg_rules.txt"
+			)).ok(),
+		
+			fare_transfer_rules: parse_csv(&dataset_path.join(
+				"fare_transfer_rules.txt"
+			)).ok(),
+		
+			areas: parse_csv(&dataset_path.join(
+				"areas.txt"
+			)).ok(),
+		
+			stop_areas: parse_csv(&dataset_path.join(
+				"stop_areas.txt"
+			)).ok(),
+		
+			networks: parse_csv(&dataset_path.join(
+				"networks.txt"
+			)).ok(),
+		
+			route_networks: parse_csv(&dataset_path.join(
+				"route_networks.txt"
+			)).ok(),
+		
+			shapes: parse_csv(&dataset_path.join(
+				"shapes.txt"
+			)).ok(),
+		
+			frequencies: parse_csv(&dataset_path.join(
+				"frequencies.txt"
+			)).ok(),
+		
+			transfers: parse_csv(&dataset_path.join(
+				"transfers.txt"
+			)).ok(),
+		
+			pathways: parse_csv(&dataset_path.join(
+				"pathways.txt"
+			)).ok(),
+		
+			levels: parse_csv(&dataset_path.join(
+				"levels.txt"
+			)).ok(),
+		
+			location_groups: parse_csv(&dataset_path.join(
+				"location_groups.txt"
+			)).ok(),
+		
+			location_group_stops: parse_csv(&dataset_path.join(
+				"location_group_stops.txt"
+			)).ok(),
+		
+			booking_rules: parse_csv(&dataset_path.join(
+				"booking_rules.txt"
+			)).ok(),
+		
+			translations: parse_csv(&dataset_path.join(
+				"translations.txt"
+			)).ok(),
+		
+			feed_info: parse_csv(&dataset_path.join(
+				"feed_info.txt"
+			)).expect("File 'feed_info.txt' is required, but failed to parse"),
+		
+			attributions: parse_csv(&dataset_path.join(
+				"attributions.txt"
+			)).ok(),
+		
+		}
+	}
+}
