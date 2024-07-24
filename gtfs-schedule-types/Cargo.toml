@@ -5,7 +5,6 @@ edition = "2021"
 description = "Rust types generated from GTFS Schedule documentation"
 repository = "https://github.com/firestack/gtfs-schedule-types.nix.rs/"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [features]
 default = ["debug", "serde", "from-dataset"]
 debug = []
