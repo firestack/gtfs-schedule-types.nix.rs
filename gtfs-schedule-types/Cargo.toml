@@ -6,7 +6,8 @@ description = "Rust types generated from GTFS Schedule documentation"
 repository = "https://github.com/firestack/gtfs-schedule-types.nix.rs/"
 
 [features]
-default = ["only-type-definitions"]
+default = ["all"]
+# default = ["only-type-definitions"]
 only-type-definitions = []
 
 all = ["debug", "serde", "from-dataset"]
