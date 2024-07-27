@@ -6,9 +6,17 @@ description = "Rust types generated from GTFS Schedule documentation"
 repository = "https://github.com/firestack/gtfs-schedule-types.nix.rs/"
 
 [features]
-default = ["debug", "serde", "from-dataset"]
+default = ["only-type-definitions"]
+only-type-definitions = []
+
+# Implement `Debug` for `Records` and `Dataset`
 debug = []
+
+# Implement Serialize/Deserialize for `Records`
 serde = ["dep:serde"]
+
+# Feature to parse `Datasets` from directories with the filenames defined in the
+# specification
 from-dataset = ["serde", "dep:csv"]
 
 [dependencies]
