@@ -1,0 +1,36 @@
+[build]
+rustflags = [
+	## Allowed Opitons
+	"-A", "clippy::tabs_in_doc_comments",
+	# TODO: figure out if it's possible to only enable this in the `debug`
+	# feature, or if it's even worth doing
+	"-A", "missing_debug_implementations",
+
+	## Warning options
+	"-W", "absolute_paths_not_starting_with_crate",
+	"-W", "clippy::missing_docs_in_private_items",
+	"-W", "clippy::missing_errors_doc",
+	"-W", "clippy::missing_panics_doc",
+	"-W", "elided_lifetimes_in_paths",
+	"-W", "explicit_outlives_requirements",
+	"-W", "future-incompatible",
+	"-W", "keyword_idents",
+	"-W", "macro_use_extern_crate",
+	"-W", "meta_variable_misuse",
+	"-W", "missing_abi",
+	"-W", "missing_copy_implementations",
+	"-W", "missing_docs",
+	"-W", "nonstandard-style",
+	"-W", "noop_method_call",
+	"-W", "pointer_structural_match",
+	"-W", "single_use_lifetimes",
+	"-W", "trivial_casts",
+	"-W", "unreachable_pub",
+	"-W", "unused_crate_dependencies",
+	"-W", "unused_lifetimes",
+	"-W", "unused_qualifications",
+	"-W", "variant_size_differences",
+
+	## Denied options
+	"-D", "unsafe_op_in_unsafe_fn"
+]
