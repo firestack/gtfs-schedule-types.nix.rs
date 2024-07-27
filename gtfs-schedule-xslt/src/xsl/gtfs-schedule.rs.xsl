@@ -70,7 +70,7 @@ use std::{{
 }};
 
 #[cfg(feature = "from-dataset")]
-use crate::parse_csv;
+use crate::parse::parse_csv;
 
 #[cfg(feature = "from-dataset")]
 impl<T: AsRef<Path>> From<T> for Dataset {{
