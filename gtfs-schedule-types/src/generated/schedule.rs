@@ -4,7 +4,8 @@ use crate::records::*;
 /**
  * Container referencing all records contained in a GTFS Schedule dataset
  */
-#[derive(Debug, Default)]
+#[cfg_attr(feature = "debug", derive(Debug))]
+#[derive(Default)]
 pub struct Dataset {
 
 /** __File Name:__ `agency.txt`

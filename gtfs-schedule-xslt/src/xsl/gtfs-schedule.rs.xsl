@@ -48,7 +48,8 @@ use crate::records::*;
 /**
  * Container referencing all records contained in a GTFS Schedule dataset
  */
-#[derive(Debug, Default)]
+#[cfg_attr(feature = "debug", derive(Debug))]
+#[derive(Default)]
 pub struct Dataset {{
 <xsl:for-each select="//records/record">
 /** __File Name:__ &bt;{name}&bt;
