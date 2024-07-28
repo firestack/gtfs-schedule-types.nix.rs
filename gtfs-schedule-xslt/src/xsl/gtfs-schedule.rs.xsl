@@ -231,7 +231,7 @@ pub struct {rs:struct-name-from-filename(name)} {{<xsl:apply-templates
 	/** Record: __{presence}__
 
 {serialize(description/x:body/node(), $xml-serialize-opts)}
-	 */
+	*/
 	pub {name}: {rs:gtfs-type(type, presence, name, $unique-field-id-map)},
 </xsl:template>
 <!-- #endregion Structs -->
