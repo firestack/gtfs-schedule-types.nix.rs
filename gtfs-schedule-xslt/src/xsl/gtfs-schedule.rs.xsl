@@ -65,19 +65,24 @@ __Presence:__ {presence}
 <![CDATA[
 #[cfg(feature = "from-dataset")]
 use std::{{
-	convert::{{AsRef, From}},
+	convert::AsRef,
 	path::Path,
 }};
 
 #[cfg(feature = "from-dataset")]
 use crate::parse::parse_csv;
 
+
 #[cfg(feature = "from-dataset")]
-impl<T: AsRef<Path>> From<T> for Dataset {{
-	fn from(dataset_path: T) -> Self {{
+impl Dataset {{
+	/**
+	*   Creates a [`Dataset`] from a [`Path`] by reading the expected text files
+	*   from the provided directory.
+	*/
+	pub fn read_from_path<T: AsRef<Path>>(dataset_path: T) -> Result<Self, &'static str> {{
 		let dataset_path = dataset_path.as_ref();
 ]]>
-		Self {{<xsl:for-each select="//records/record">
+		Ok(Self {{<xsl:for-each select="//records/record">
 			{substring-before(name, '.txt')}: parse_csv(&amp;dataset_path.join(
 				"{name}"
 			))<xsl:choose>
