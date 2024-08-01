@@ -245,19 +245,24 @@ __Presence:__ Optional
 
 #[cfg(feature = "from-dataset")]
 use std::{
-	convert::{AsRef, From},
+	convert::AsRef,
 	path::Path,
 };
 
 #[cfg(feature = "from-dataset")]
-use crate::parse_csv;
+use crate::parse::parse_csv;
+
 
 #[cfg(feature = "from-dataset")]
-impl<T: AsRef<Path>> From<T> for Dataset {
-	fn from(dataset_path: T) -> Self {
+impl Dataset {
+	/**
+	*   Creates a [`Dataset`] from a [`Path`] by reading the expected text files
+	*   from the provided directory.
+	*/
+	pub fn read_from_path<T: AsRef<Path>>(dataset_path: T) -> Result<Self, &'static str> {
 		let dataset_path = dataset_path.as_ref();
 
-		Self {
+		Ok(Self {
 			agency: parse_csv(&dataset_path.join(
 				"agency.txt"
 			)).expect("File 'agency.txt' is required, but failed to parse"),
