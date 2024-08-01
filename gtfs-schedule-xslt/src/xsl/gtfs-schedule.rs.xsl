@@ -83,9 +83,8 @@ impl<T: AsRef<Path>> From<T> for Dataset {{
 			))<xsl:choose>
 				<xsl:when test="not(rs:type_is_optional(presence))">.expect("File '{name}' is required, but failed to parse")</xsl:when>
 				<xsl:otherwise>.ok()</xsl:otherwise>
-			</xsl:choose>,
-		</xsl:for-each>
-		}}
+			</xsl:choose>,</xsl:for-each>
+		}})
 	}}
 }}
 </xsl:result-document>
