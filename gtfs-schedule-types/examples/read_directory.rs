@@ -6,7 +6,7 @@ use std::io::{stdout, Write};
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
-	let schedule = Dataset::from("./result/share/gtfs/mbta");
+	let schedule = Dataset::read_from_path("./result/share/gtfs/mbta")?;
 
 	let mut lock = stdout().lock();
 
