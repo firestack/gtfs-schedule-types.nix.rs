@@ -1,10 +1,11 @@
 //! Example of parsing a GTFS Dataset with the Serde and CSV Crates
 //!
 
-use gtfs_schedule_types::{Dataset, Result};
+use gtfs_schedule_types::Dataset;
 use std::io::{stdout, Write};
+use std::error::Error;
 
-fn main() -> Result<()> {
+fn main() -> Result<(), Box<dyn Error + Send + Sync + 'static>> {
 	let schedule = Dataset::from("./result/share/gtfs/mbta");
 
 	let mut lock = stdout().lock();
